@@ -10,6 +10,15 @@ const variantSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
+const imageSchema = new mongoose.Schema({
+  url: {
+    type: String,
+  },
+  publicId: {
+    type: String
+  }
+}, { _id: false });
+
 const menuSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -29,13 +38,13 @@ const menuSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  imageUrl: {
-    type: String,
-    required: true,
+  images: {
+    type: [imageSchema],
+    default: [],
   },
   variants: {
     type: [variantSchema],
-    default: null,
+    default: [],
   }
 }, { timestamps: true });
 

@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { tokenValidation } from '../validation/user-validation.js';
 import {validate} from "../validation/validation.js"
 dotenv.config();
-
 // const tokenTypeList = ["access", "refresh"]
 
 export const authMiddleware = (roles = []) => {
@@ -32,7 +31,7 @@ export const authMiddleware = (roles = []) => {
     token =  validate(tokenValidation, token)
 
     let verifyToken = process.env.ACCESS_TOKEN_SECRET
-    if (req.path === '/api/users/current/refreshToken'){
+    if (req.path === '/api/users/refreshToken'){
       verifyToken = process.env.REFRESH_TOKEN_SECRET
     }
 

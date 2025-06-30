@@ -57,7 +57,12 @@ const sendVerificationEmail =  async (request) => {
 
 const verifyUser = async (request) => {
   const { email } = request.user;
-  const user = await User.findOne({ email: email }).select('email isVerified');
+  const user = await User.findOneAndUpdate(
+    { email: email },
+    { $set: { isVerified: true } },
+    { new: true }
+  ).select('email isVerified');
+
 
   if (!user) {
     throw new ResponseError(404, 'User is not found!');
@@ -67,11 +72,7 @@ const verifyUser = async (request) => {
     throw new ResponseError(400, 'Your email have been verified.');
   }
 
-  return User.findByIdAndUpdate(
-    user._id,
-    { $set: { isVerified: true } },
-    { new: true }
-  ).select('email isVerified');
+  return user;
 }
 
 const generateAccessToken = (payload, expireTime) => {
@@ -135,17 +136,17 @@ const get = async (email) => {
 
 const update = async (request) => {
   const updateRequest = validate(updateUserValidation, request.body);
-  const searchUser = await User.findOne({ email: request.user.email });
+  const searchUser = await User.findOneAndUpdate(
+    {email : request.user.email},
+    { $set: updateRequest },
+    { new :true }
+  ).select('name email phone location');
 
   if(!searchUser){
     throw new ResponseError(404, "User is not found");
   };
 
-  return User.findByIdAndUpdate(
-    searchUser._id,
-    { $set: updateRequest },
-    { new :true }
-  ).select('name email phone location');
+  return searchUser;
 };
 
 const forgetPassword = async (request) => {
@@ -178,7 +179,7 @@ const resetPassword = async (request) => {
   const user = await User.findOne({ email: request.user.email })
     .select('email');
 
-  if (user != 1) {
+  if (!user) {
     throw new ResponseError(404, 'User is not found!');
   };
 
@@ -218,29 +219,26 @@ const changePassword = async (request) => {
     role : user.role
   };
 
-  const newRefreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET);
+  const newRefreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn : "7d" })
 
   return User.findByIdAndUpdate(
     user._id,
     { $set: {
       password : newPassword,
       refreshToken : newRefreshToken } },
-    { new :true }
+    { new: true }
   ).select('refreshToken');
 };
 
 const logout = async (request) => {
-  const user = await User.findOne({ email: request.email })
+  const user = await User.findByIdAndUpdate(
+    user._id,
+    { $set: { refreshToken : "" } },
+  )
 
   if(!user){
     throw new ResponseError(404, "User is not found");
   };
-
-  await User.findByIdAndUpdate(
-    user._id,
-    { $set: {
-        refreshToken : ""} },
-  )
 
   return {
     data : {}

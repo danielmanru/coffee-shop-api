@@ -87,9 +87,7 @@ const changePassword = async (req, res, next) => {
     const result = await userService.changePassword(req);
     res.status(200).json({
       status : 'SUCCESS',
-      data : {
-        refreshToken : result.token
-      }
+      data : result
     });
   } catch(e) {
     next(e);

@@ -28,6 +28,16 @@ const openingHoursSchema = new Schema({
   },
 }, { _id: false });
 
+const imageSchema = new mongoose.Schema({
+  url: {
+    type: String,
+  },
+  publicId: {
+    type: String
+  }
+}, { _id: false });
+
+
 const storeSchema = new Schema({
   name: {
     type: String,
@@ -35,6 +45,10 @@ const storeSchema = new Schema({
   },
   location: {
     type: locationSchema,
+    default: null
+  },
+  image: {
+    type: imageSchema,
     default: null
   },
   openingHours: {
