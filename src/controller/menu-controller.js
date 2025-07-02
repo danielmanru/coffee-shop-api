@@ -4,6 +4,7 @@ const addMenu = async(req, res, next) => {
   try {
     const result = await menuService.addMenu(req.body);
     res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -15,6 +16,7 @@ const getAllMenus = async(req, res, next) => {
   try {
     const result = await menuService.getAllMenus();
     res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -37,6 +39,7 @@ const getMenuByItsAvailability = async(req, res, next) => {
   try {
     const result = await menuService.getMenuByItsAvailability();
     res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -48,28 +51,7 @@ const getMenuById = async(req, res, next) => {
   try {
     const result = await menuService.getMenuById(req.params.menuId);
     res.status(200).json({
-      data: result
-    });
-  } catch (err) {
-    next(err);
-  }
-}
-
-const addImage = async(req, res, next) => {
-  try {
-    const result = await menuService.addImage(req.query.menuId, req.files);
-    res.status(200).json({
-      data: result
-    });
-  } catch (err) {
-    next(err);
-  }
-}
-
-const deleteImage = async(req, res, next) => {
-  try {
-    const result = await menuService.deleteImage(req.query.menuId, req.query.publicIds.split(','));
-    res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -79,8 +61,9 @@ const deleteImage = async(req, res, next) => {
 
 const updateMenu = async(req, res, next) => {
   try {
-    const result = await menuService.updateMenu(req);
+    const result = await menuService.updateMenu(req.body, req.params.menuId);
     res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -92,6 +75,7 @@ const deleteMenu = async(req, res, next) => {
   try {
     const result = await menuService.deleteMenu(req.params.menuId);
     res.status(200).json({
+      success: true,
       data: result
     });
   } catch (err) {
@@ -105,8 +89,6 @@ export default {
   getMenuByCategory,
   getMenuByItsAvailability,
   getMenuById,
-  addImage,
-  deleteImage,
   updateMenu,
   deleteMenu
 }

@@ -41,7 +41,13 @@ const loginUserValidation = Joi.object({
 
 const tokenValidation = Joi.string().required()
 
-const getUserValidation = Joi.string().max(100).required()
+const getUserValidation = Joi.string()
+  .email({tlds : { allow : true }})
+  .regex(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)
+  .required()
+  .messages({
+    "string.pattern.base" : "Should not contain uppercase letters!",
+  })
 
 const updateUserValidation = Joi.object({
   name : Joi.string().max(100).required(),

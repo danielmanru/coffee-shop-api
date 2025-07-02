@@ -10,7 +10,7 @@ const variantSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
-const imageSchema = new mongoose.Schema({
+const imagesSchema = new mongoose.Schema({
   url: {
     type: String,
   },
@@ -24,6 +24,7 @@ const menuSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    unique: true
   },
   description: {
     type: String,
@@ -39,7 +40,7 @@ const menuSchema = new mongoose.Schema({
     default: true,
   },
   images: {
-    type: [imageSchema],
+    type: [imagesSchema],
     default: [],
   },
   variants: {

@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { tokenValidation } from '../validation/user-validation.js';
 import {validate} from "../validation/validation.js"
 dotenv.config();
-// const tokenTypeList = ["access", "refresh"]
 
 export const authMiddleware = (roles = []) => {
   if (typeof roles === 'string') {
@@ -11,15 +10,6 @@ export const authMiddleware = (roles = []) => {
   }
 
   return (req, res, next) => {
-    // if(!tokenTypeList.includes(tokenType)) {
-    //   return res.status(400).json({
-    //     success : false,
-    //     errors : {
-    //       message : "tokenType is not valid, expected 'access' or 'refresh'"
-    //     }
-    //   })
-    // }
-
     let token = req.headers['authorization']?.split(' ')[1] || req.query.token;
 
     if (token == null) {
@@ -44,10 +34,13 @@ export const authMiddleware = (roles = []) => {
         return res.status(401).json({
           errors : 'Unauthorized'
         })
+      } else if (req.path != '/api/users/verifyUser' && user.isVerified === false) {
+        return res.status(401).json({
+          errors : "User's email is not verified"
+        })
       }
-
       req.user = user;
-      next();
     })
+    next();
   }
 }

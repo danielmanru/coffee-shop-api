@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const {Schema, model} = mongoose;
 
 const locationSchema = new Schema({
-  address: {
+  alamat: {
     type: String,
     required: true
   },
@@ -28,7 +28,7 @@ const openingHoursSchema = new Schema({
   },
 }, { _id: false });
 
-const imageSchema = new mongoose.Schema({
+const imagesSchema = new mongoose.Schema({
   url: {
     type: String,
   },
@@ -38,26 +38,37 @@ const imageSchema = new mongoose.Schema({
 }, { _id: false });
 
 
-const storeSchema = new Schema({
+const outletSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   location: {
     type: locationSchema,
-    default: null
+    required: true
   },
-  image: {
-    type: imageSchema,
+  images: {
+    type: [imagesSchema],
     default: null
   },
   openingHours: {
     type: openingHoursSchema,
-    default: null
+    required: true
   },
+  isActive : {
+    type: Boolean,
+    default: true
+  }
 }, { timestamps: true });
 
-const Store = model('Store', storeSchema);
+outletSchema.index({
+  name : "text",
+  "location.alamat" : "text",
+  "location.kelurahan" : "text",
+  "location.kecamatan" : "text",
+})
+const Outlet = model('Outlet', outletSchema);
 
-export default Store;
+export default Outlet;
 

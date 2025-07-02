@@ -4,15 +4,13 @@ import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const userRouter = new express.Router();
 userRouter.use(authMiddleware())
-userRouter.get('/api/users', userController.get)
+userRouter.get('/api/users', userController.getUser)
 userRouter.get('/api/users/sendVerificationEmail', userController.sendVerificationEmail)
 userRouter.get('/api/users/verifyUser', userController.verifyUser)
 userRouter.get('/api/users/refreshToken', userController.refreshToken)
 userRouter.put('/api/users/resetPassword', userController.resetPassword)
-userRouter.put('/api/users/updateUserDetail', userController.update)
+userRouter.put('/api/users/updateUserDetail', userController.updateUserDetail)
 userRouter.put('/api/users/changePassword', userController.changePassword)
 userRouter.put('/api/users/current/logout', userController.logout)
 
-export{
-  userRouter
-}
+export default  userRouter;

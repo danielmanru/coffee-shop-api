@@ -11,9 +11,5 @@ menuRouter.get('/api/menus/getMenuByItsAvailability', menuController.getMenuByIt
 menuRouter.get('/api/menus/getMenuById', menuController.getMenuById)
 menuRouter.put('/api/menus/updateMenu/:menuId', authMiddleware(["admin"]),menuController.updateMenu)
 menuRouter.delete('/api/menus/deleteMenu/:menuId', authMiddleware(["admin"]),menuController.updateMenu)
-menuRouter.post('/api/menus/addImage', authMiddleware(["admin"]), upload.array("images", 10), menuController.addImage)
-menuRouter.put('/api/menus/deleteImage', authMiddleware(["admin"]), menuController.deleteImage)
 
-export{
-  menuRouter
-}
+export default  menuRouter;

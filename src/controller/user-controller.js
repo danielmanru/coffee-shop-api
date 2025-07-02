@@ -57,10 +57,10 @@ const refreshToken = async(req, res, next) => {
   }
 }
 
-const get = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try{
     const email =  req.user.email;
-    const result = await userService.get(email);
+    const result = await userService.getUser(email);
     res.status(200).json({
       data : result,
       message : `login as ${req.user.role}`
@@ -70,9 +70,9 @@ const get = async (req, res, next) => {
   }
 };
 
-const update = async (req, res, next) => {
+const updateUserDetail = async (req, res, next) => {
   try{
-    const result = await userService.update(req);
+    const result = await userService.updateUserDetail(req);
 
     res.status(200).json({
       data : result
@@ -133,8 +133,8 @@ const logout = async (req, res, next) => {
 export default{
   register,
   login,
-  get,
-  update,
+  getUser,
+  updateUserDetail,
   changePassword,
   refreshToken,
   verifyUser,

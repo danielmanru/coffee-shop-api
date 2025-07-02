@@ -4,11 +4,11 @@ import pLimit from "p-limit";
 
 const limit = pLimit(10);
 
-const singleUpload = async (file) => {
+const singleUpload = async (file, folderName) => {
   return new Promise((resolve, reject) => {
     const uploadStream = newCloudinary.uploader.upload_stream(
       {
-        asset_folder: "coffee_shop_assets",
+        asset_folder: folderName,
         display_name: file.originalname,
         public_id: file.originalname,
         use_asset_folder_as_public_id_prefix : true
@@ -22,7 +22,7 @@ const singleUpload = async (file) => {
   })
 }
 
-const imageUpload = async (files) => {
+const uploadImages = async (files) => {
   const uploads = files.map((file) => {
     return limit(async () => {
       const result = await singleUpload(file);
@@ -32,4 +32,4 @@ const imageUpload = async (files) => {
   return Promise.all(uploads);
 };
 
-export default imageUpload;
+export default uploadImages;

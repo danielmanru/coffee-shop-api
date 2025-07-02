@@ -69,7 +69,7 @@ const verifyUser = async (request) => {
   }
 
   if (user.isVerified === "TRUE") {
-    throw new ResponseError(400, 'Your email have been verified.');
+    throw new ResponseError(400, 'Your email has been verified.');
   }
 
   return user;
@@ -121,7 +121,7 @@ const login = async(request) => {
   }
 };
 
-const get = async (email) => {
+const getUser = async (email) => {
   email = validate((getUserValidation), email);
 
   const user = await User.findOne({ email: email })
@@ -134,7 +134,7 @@ const get = async (email) => {
   return user;
 };
 
-const update = async (request) => {
+const updateUserDetail = async (request) => {
   const updateRequest = validate(updateUserValidation, request.body);
   const searchUser = await User.findOneAndUpdate(
     {email : request.user.email},
@@ -240,16 +240,14 @@ const logout = async (request) => {
     throw new ResponseError(404, "User is not found");
   };
 
-  return {
-    data : {}
-  }
+  return null;
 };
 
 export default{
   register,
   login,
-  get,
-  update,
+  getUser,
+  updateUserDetail,
   changePassword,
   refreshToken,
   verifyUser,

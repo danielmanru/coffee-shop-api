@@ -2,17 +2,12 @@ import { validate } from "../validation/validation.js"
 import {
   getMenuByCategoryValidation,
   getMenuByItsAvailabilityValidation,
-  getMenuByIdValidation,
   addMenuValidation,
   updateMenuValidation,
-  deleteMenuValidation,
-  addImageValidation,
-  deleteImageValidation,
 } from "../validation/menu-validation.js"
 import Menu from "../model/menu.model.js";
 import {ResponseError} from "../error/response-error.js";
-import imageService from "./image-service.js";
-import {request} from "express";
+import idValidation from "../validation/id-validation.js";
 
 const getAllMenus = async() => {
    return Menu.find( {} );
@@ -29,7 +24,7 @@ const getMenuByItsAvailability = async(request) => {
 }
 
 const getMenuById = async (menuId) => {
-  const menu_id = validate(getMenuByIdValidation(menuId));
+  const menu_id = validate(idValidation, menuId);
   const menu = await Menu.findById(menu_id);
   if (!menu) {
     throw new ResponseError(404, 'Menu is not found!');
@@ -48,70 +43,11 @@ const addMenu = async(request) => {
   return Menu.create(req);
 }
 
-const addImage = async(menuId, files) => {
-  const request = {
-    menu_id: menuId,
-    image_metadata: []
-  }
-
-  files.map(file => request.image_metadata.push({
-    originalname: file.originalname,
-    mimetype: file.mimetype,
-    size: file.size,}))
-  validate(addImageValidation, request)
-  const imageUploaded = await imageService.uploadImage(files);
-
-  const updatedImage = await Menu.findByIdAndUpdate(
-    menuId,
-    {
-      $push: {
-        images : {
-          $each: imageUploaded
-        }
-      }
-    },
-    { new: true }
-  );
-
-  if(!updatedImage) {
-    throw new ResponseError(404, 'Menu is not found!');
-  }
-
-  return updatedImage;
-}
-
-const deleteImage = async(menuId, publicIds,) => {
-  const req = validate(deleteImageValidation, {
-    menuId  : menuId,
-    publicIds : publicIds,
-  });
-
-  req.publicIds.map(publicId => imageService.deleteImage(publicId));
-
-
-  const updatedImage = await Menu.findByIdAndUpdate(
-    req.menuId,
-    {
-      $pull: {
-        images : {
-          publicId: { $in: publicIds }
-        }
-      }
-    },
-    { new: true }
-  );
-
-  if(!updatedImage) {
-    throw new ResponseError(404, 'Menu is not found!');
-  }
-
-  return updatedImage;
-}
-
-const updateMenu = async(request) => {
-  const req = validate(updateMenuValidation, request.body);
+const updateMenu = async(request, menuId) => {
+  const req = validate(updateMenuValidation, request);
+  const menu_id = validate(idValidation, menuId);
   const menu = await Menu.findByIdAndUpdate(
-    request.params.menuId,
+    menu_id,
     { $set: req },
     { new: true }
   );
@@ -123,7 +59,7 @@ const updateMenu = async(request) => {
 }
 
 const deleteMenu = async(menuId) => {
-  const menu_id = validate(deleteMenuValidation, menuId);
+  const menu_id = validate(idValidation, menuId);
   const deletedMenu = await Menu.findByIdAndDelete(menu_id);
 
   if(!deletedMenu) {
@@ -141,6 +77,4 @@ export default {
   getAllMenus,
   updateMenu,
   deleteMenu,
-  addImage,
-  deleteImage,
 }
