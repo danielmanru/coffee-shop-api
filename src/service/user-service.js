@@ -16,7 +16,7 @@ import jwt from "jsonwebtoken";
 import { getEmailHtml, sendEmail } from '../lib/mailer.js';
 import User from "../model/user.model.js";
 
-const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
+const { ACCESS_TOKEN_SECRET, VERIFY_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
 
 const register = async(request) => {
   const user = validate(registerUserValidation, request);
@@ -28,31 +28,18 @@ const register = async(request) => {
 
   user.password = await bcrypt.hash(user.password, 10);
 
-  const verificationToken = generateAccessToken({
-    email : user.email,
-  }, "1h");
-  const verificationLink = `${API_URI}/users/verifyUser?token=${verificationToken}`
-  const emailTemplate = await getEmailHtml('verification-email.ejs', { link : verificationLink})
-
-  sendEmail(user.email, 'Verify your email', emailTemplate)
+  await sendVerificationEmail(user.email)
 
   const userCreated = await User.create(user);
   return User.findById(userCreated._id).select('name email');
 };
 
-const sendVerificationEmail =  async (request) => {
-  const verificationToken = generateAccessToken({
-    email : request.email,
-  }, "1h");
+const sendVerificationEmail =  async (userEmail) => {
+  const verificationToken = await jwt.sign({ email: userEmail}, VERIFY_TOKEN_SECRET, { expiresIn : "1d" });
   const verificationLink = `${API_URI}/users/verifyUser?token=${verificationToken}`
   const emailTemplate = await getEmailHtml('verification-email.ejs', { link : verificationLink})
 
-  sendEmail(request.email, 'Verify your email', emailTemplate)
-
-  return {
-    status : "PENDING",
-    message : "An verification email is being sent to your email!"
-  }
+  sendEmail(userEmail, 'Verify your email', emailTemplate)
 }
 
 const verifyUser = async (request) => {

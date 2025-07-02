@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 const addImagesValidation = Joi.object({
   menu_id: Joi.string().max(1000).required(),
-  asset_folder: Joi.string().valid(['menu-assets', 'outlet-assets', 'test']),
+  asset_folder: Joi.string().valid('menu-assets', 'outlet-assets', 'test'),
   image_metadata: Joi.array().items(Joi.object(
     {
       originalname: Joi.string().required(),

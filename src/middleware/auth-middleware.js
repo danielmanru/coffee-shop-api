@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { tokenValidation } from '../validation/user-validation.js';
 import {validate} from "../validation/validation.js"
 dotenv.config();
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, VERIFY_TOKEN_SECRET } =  process.env;
 
 export const authMiddleware = (roles = []) => {
   if (typeof roles === 'string') {
@@ -20,9 +21,11 @@ export const authMiddleware = (roles = []) => {
 
     token =  validate(tokenValidation, token)
 
-    let verifyToken = process.env.ACCESS_TOKEN_SECRET
+    let verifyToken = ACCESS_TOKEN_SECRET
     if (req.path === '/api/users/refreshToken'){
-      verifyToken = process.env.REFRESH_TOKEN_SECRET
+      verifyToken = REFRESH_TOKEN_SECRET
+    } else if(req.path === '/api/users/verifyUser') {
+      verifyToken = VERIFY_TOKEN_SECRET
     }
 
     jwt.verify(token, verifyToken, (err, user) =>{

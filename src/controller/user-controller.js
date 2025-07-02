@@ -13,10 +13,11 @@ const register = async (req, res, next) => {
 
 const sendVerificationEmail = async(req, res, next) => {
   try{
-    const result = await userService.sendVerificationEmail(req.user);
+    const result = await userService.sendVerificationEmail(req.user.email);
 
     res.status(200).json({
-      data : result
+      status : "PENDING",
+      message : "An verification email is being sent to your email!"
     })
   } catch(e) {
     next(e);
