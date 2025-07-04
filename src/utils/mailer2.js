@@ -5,6 +5,7 @@ import { google } from "googleapis";
 import ejs from "ejs";
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { createRequire } from "module";
 
 const {
   GOOGLE_CLIENT_ID,
@@ -51,23 +52,7 @@ const sendEmail = (to, subject, html) => {
   })
 }
 
-const getEmailHtml = (filename, data) => {
-  return new Promise(async (resolve, reject) =>{
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    const filePath = path.join(__dirname, '/../views/email/', filename);
-
-    await ejs.renderFile(filePath, data, (err, data) => {
-      if (err) {
-        reject(err);
-      }
-
-      resolve(data);
-    })
-  })
-};
-
 export {
   sendEmail,
-  getEmailHtml,
+
 };

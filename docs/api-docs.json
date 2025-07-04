@@ -1,0 +1,15 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Coffee Shop Restful API",
+    "description": "OpenAPI for coffee shop restful API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "paths": {
+  }
+}

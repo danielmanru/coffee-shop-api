@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
-import { tokenValidation } from '../validation/user-validation.js';
-import {validate} from "../validation/validation.js"
+import { tokenValidation } from '../validations/user-validation.js';
+import {validate} from "../validations/validation.js"
 dotenv.config();
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, VERIFY_TOKEN_SECRET } =  process.env;
 
@@ -11,7 +11,7 @@ export const authMiddleware = (roles = []) => {
   }
 
   return (req, res, next) => {
-    let token = req.headers['authorization']?.split(' ')[1] || req.query.token;
+    const token = req.headers['authorization']?.split(' ')[1] || req.query.token;
 
     if (token == null) {
       return res.status(401).json({
@@ -19,12 +19,13 @@ export const authMiddleware = (roles = []) => {
       });
     }
 
-    token =  validate(tokenValidation, token)
-
+    validate(tokenValidation, token)
+    const authPath = "/api/v1/users"
     let verifyToken = ACCESS_TOKEN_SECRET
-    if (req.path === '/api/users/refreshToken'){
+
+    if (req.path === authPath+'/refreshToken'){
       verifyToken = REFRESH_TOKEN_SECRET
-    } else if(req.path === '/api/users/verifyUser') {
+    } else if(req.path === authPath+'/verifyUser') {
       verifyToken = VERIFY_TOKEN_SECRET
     }
 
@@ -37,7 +38,7 @@ export const authMiddleware = (roles = []) => {
         return res.status(401).json({
           errors : 'Unauthorized'
         })
-      } else if (req.path != '/api/users/verifyUser' && user.isVerified === false) {
+      } else if (!req.path.includes(authPath) && user.isVerified === false) {
         return res.status(401).json({
           errors : "User's email is not verified"
         })

@@ -5,10 +5,10 @@
 #### Request Body : 
 ```json
 {
-  "name" : "John Doe",
-  "email" : "johndoe@gmail.com",
-  "password" : "klendestin",
-  "phone" : "0898987655678",
+  "name" : "Temalo",
+  "email" : "temalo7083@exitbit.com",
+  "password" : "K5gb#mpg",
+  "phone" : "089898765567",
   "role" : "customer"
 }
 ```
@@ -18,10 +18,10 @@ Valid value for `role` is `customer`, `staff`, or `admin`
 ```json
 {
   "success" : true,
-  "message" : "User has been registered",
+  "message" : "user registered successfully",
   "data": {
-    "email" : "johndoe@gmail.com",
-    "name" : "John Does"
+    "email" : "temalo7083@exitbit.com",
+    "name" : "Temalo"
   }
 }
 ```
@@ -41,15 +41,15 @@ Valid value for `role` is `customer`, `staff`, or `admin`
 #### Request Body : 
 ```json
 {
-  "email" : "johndoe@gmail.com",
-  "password" : "klendestin"
+  "email" : "temalo7083@exitbit.com",
+  "password" : "K5gb#mpg"
 }
 ```
 #### Response Body Success : 
 ```json
 {
   "success" : true,
-  "message" : "User successfully logged in",
+  "message" : "Login successfully",
   "data": {
     "accessToken" : "unique-token", 
     "refreshToken" : "unique-token"
@@ -70,7 +70,7 @@ Response Body Errors : Email or password is wrong
 }
 ```
 
-## Update User API
+## Update User Detail API
 ### Endpoint : PUT /api/users/updateUserDetail
 
 Headers : 

@@ -1,13 +1,13 @@
-import { validate } from "../validation/validation.js"
+import { validate } from "../validations/validation.js"
 import {
   getMenuByCategoryValidation,
   getMenuByItsAvailabilityValidation,
   addMenuValidation,
   updateMenuValidation,
-} from "../validation/menu-validation.js"
-import Menu from "../model/menu.model.js";
+} from "../validations/menu-validation.js"
+import Menu from "../models/menu.model.js";
 import {ResponseError} from "../error/response-error.js";
-import idValidation from "../validation/id-validation.js";
+import idValidation from "../validations/id-validation.js";
 
 const getAllMenus = async() => {
    return Menu.find( {} );

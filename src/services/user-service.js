@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import {validate} from "../validation/validation.js"
+import {validate} from "../validations/validation.js"
 import {
   changePasswordValidation,
   getUserValidation,
@@ -9,12 +9,12 @@ import {
   resetPasswordValidation,
   updateUserValidation,
   forgetPasswordValidation,
-} from "../validation/user-validation.js"
+} from "../validations/user-validation.js"
 import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { getEmailHtml, sendEmail } from '../lib/mailer.js';
-import User from "../model/user.model.js";
+import { getEmailHtml, sendEmail } from '../utils/mailer.js';
+import User from "../models/user.model.js";
 
 const { ACCESS_TOKEN_SECRET, VERIFY_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
 
@@ -32,6 +32,55 @@ const register = async(request) => {
 
   const userCreated = await User.create(user);
   return User.findById(userCreated._id).select('name email');
+};
+
+const login = async(request) => {
+  const loginRequest = validate(loginUserValidation, request);
+  const user = await User.findOne({ email: loginRequest.email });
+
+  if (!user){
+    throw new ResponseError(401, "Email or password is wrong");
+  };
+
+  const isPasswordValid = await bcrypt.compare(loginRequest.password, user.password);
+  if(!isPasswordValid){
+    throw new ResponseError(401, "Email or password is wrong");
+  }
+
+  const payload = {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    isVerified: user.isVerified,
+  };
+  const accessToken = generateAccessToken(payload, "1d")
+  const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn : "7d" })
+
+  const userLoginDoc = await User.findByIdAndUpdate(
+    user._id,
+    { $set: { refreshToken: refreshToken } },
+  {new: true}
+  ).select("name email");
+
+  const userLogin = userLoginDoc.toObject()
+  userLogin.accessToken = accessToken;
+
+  return userLogin
+};
+
+const updateUserDetail = async (request) => {
+  const updateRequest = validate(updateUserValidation, request.body);
+  const searchUser = await User.findOneAndUpdate(
+    {email : request.user.email},
+    { $set: updateRequest },
+    { new :true }
+  ).select('-password -createdAt -updatedAt');
+
+  if(!searchUser){
+    throw new ResponseError(404, "User is not found");
+  };
+
+  return searchUser;
 };
 
 const sendVerificationEmail =  async (userEmail) => {
@@ -75,44 +124,11 @@ const refreshToken = async (request) => {
   return accessToken
 }
 
-const login = async(request) => {
-  const loginRequest = validate(loginUserValidation, request);
-  const user = await User.findOne({ email: loginRequest.email })
-    .select('email password role');
-
-  if (!user){
-    throw new ResponseError(401, "email or password is wrong");
-  };
-
-  const isPasswordValid = await bcrypt.compare(loginRequest.password, user.password);
-  if(!isPasswordValid){
-    throw new ResponseError(401, "email or password is wrong");
-  }
-
-  const payload = {
-    email : user.email,
-    role : user.role,
-  };
-
-  const accessToken = generateAccessToken(payload, "1d")
-  const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn : "7d" })
-
-  await User.findByIdAndUpdate(
-    user._id,
-    { $set: { refreshToken: refreshToken } },
-  );
-
-  return {
-    accesToken : accessToken,
-    refreshToken : refreshToken,
-  }
-};
-
 const getUser = async (email) => {
   email = validate((getUserValidation), email);
 
   const user = await User.findOne({ email: email })
-    .select('email name phone location');
+    .select('-password -createdAt -updatedAt');
 
   if (!user){
     throw new ResponseError(404, "user is not found");
@@ -121,20 +137,7 @@ const getUser = async (email) => {
   return user;
 };
 
-const updateUserDetail = async (request) => {
-  const updateRequest = validate(updateUserValidation, request.body);
-  const searchUser = await User.findOneAndUpdate(
-    {email : request.user.email},
-    { $set: updateRequest },
-    { new :true }
-  ).select('name email phone location');
 
-  if(!searchUser){
-    throw new ResponseError(404, "User is not found");
-  };
-
-  return searchUser;
-};
 
 const forgetPassword = async (request) => {
   const forgetPasswordRequest = validate(forgetPasswordValidation, request);

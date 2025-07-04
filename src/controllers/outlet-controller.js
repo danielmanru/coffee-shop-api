@@ -1,4 +1,4 @@
-import outletService from "../service/outlet-service.js";
+import outletService from "../services/outlet-service.js";
 
 const getAllOutlet = async (req, res, next) => {
   try {

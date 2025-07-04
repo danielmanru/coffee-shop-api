@@ -1,11 +1,11 @@
-import Outlet from "../model/outlet.model.js";
-import {validate} from "../validation/validation.js";
+import Outlet from "../models/outlet.model.js";
+import {validate} from "../validations/validation.js";
 import {
   addAndUpdateOutletValidation,
   searchOutletValidation,
-} from "../validation/outlet-validation.js";
+} from "../validations/outlet-validation.js";
 import {ResponseError} from "../error/response-error.js";
-import idValidation from "../validation/id-validation.js";
+import idValidation from "../validations/id-validation.js";
 
 const getAllOutlet = async (request) => {
   const outlets = await Outlet.find( {} );

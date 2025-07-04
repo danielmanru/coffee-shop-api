@@ -1,9 +1,9 @@
-import uploadImages from "../lib/image-uploader.js";
+import uploadImages from "../utils/assets-uploader.js";
 import newCloudinary from "../config/cloudinary-config.js";
-import {validate} from "../validation/validation.js";
-import Menu from "../model/menu.model.js";
+import {validate} from "../validations/validation.js";
+import Menu from "../models/menu.model.js";
 import {ResponseError} from "../error/response-error.js";
-import {addImagesValidation, deleteImagesValidation} from "../validation/image-validation.js";
+import {addImagesValidation, deleteImagesValidation} from "../validations/image-validation.js";
 
 const addImages = async(menuId, files, folderName) => {
   const request = {

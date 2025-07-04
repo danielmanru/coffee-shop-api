@@ -1,29 +1,23 @@
-import { prismaClient } from "../src/application/database"
 import bcrypt from 'bcrypt';
+import User from "../src/models/user.model.js";
 
 const removeTestUser = async () => {
-  await prismaClient.user.deleteMany({
-    where:{
-      email: "hanyatester@gmail.com"
-    }
+  await User.deleteOne({email: "hanyatester@gmail.com"})
+}
+
+const createTestUser = async (role) => {
+  await User.create({
+    name: "Temalo",
+    email: "temalo7083@exitbit.com",
+    password: "K5gb#mpg",
+    phone: "081299998888",
+    role: role
   })
 }
 
-const createTestUser = async () =>{
-  await prismaClient.user.create({
-    data:{
-      email : "hanyatester@gmail.com",
-      password : await bcrypt.hash("K5gb#mpg", 10),
-      name : "Hanya Tester",
-      birthDate : 1,
-      birthMonth : 1,
-      birthYear : 2002,
-      gender : "MALE",
-      phone : "081299998888",
-      role : "HOST",
-      token : "test",
-    }
-  })
+const verifyUser = async () => {
+  await User.findOneAndUpdate({email: "temalo7083@exitbit.com"},
+    { $set: {isVerified: true} });
 }
 
 export{

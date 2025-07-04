@@ -1,4 +1,4 @@
-import menuService from "../service/menu-service.js";
+import menuService from "../services/menu-service.js";
 
 const addMenu = async(req, res, next) => {
   try {

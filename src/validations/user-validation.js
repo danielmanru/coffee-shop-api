@@ -53,7 +53,7 @@ const updateUserValidation = Joi.object({
   name : Joi.string().max(100).required(),
   phone : Joi.string().max(13).required(),
   location : Joi.object({
-    address : Joi.string().required(),
+    alamat : Joi.string().required(),
     kecamatan : Joi.string().required(),
     kelurahan : Joi.string().required(),
     kota : Joi.string().required()

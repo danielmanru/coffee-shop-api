@@ -1,4 +1,4 @@
-import imageService from "../service/image-service.js";
+import imageService from "../services/image-service.js";
 
 const addImage = async(req, res, next) => {
   try {
