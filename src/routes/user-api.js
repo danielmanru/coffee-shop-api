@@ -11,6 +11,6 @@ userRouter.get('/refreshToken', userController.refreshToken)
 userRouter.put('/resetPassword', userController.resetPassword)
 userRouter.put('/updateUserDetail', userController.updateUserDetail)
 userRouter.put('/changePassword', userController.changePassword)
-userRouter.put('/current/logout', userController.logout)
+userRouter.put('/logout', userController.logout)
 
 export default  userRouter;

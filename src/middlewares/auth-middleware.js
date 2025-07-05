@@ -4,6 +4,7 @@ import { tokenValidation } from '../validations/user-validation.js';
 import {validate} from "../validations/validation.js"
 dotenv.config();
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, VERIFY_TOKEN_SECRET } =  process.env;
+import userRouter from "../routes/user-api.js";
 
 export const authMiddleware = (roles = []) => {
   if (typeof roles === 'string') {
@@ -20,12 +21,14 @@ export const authMiddleware = (roles = []) => {
     }
 
     validate(tokenValidation, token)
-    const authPath = "/api/v1/users"
+    const paths = userRouter.stack
+      .map(layer => layer.route?.path)
+      .filter(Boolean);
     let verifyToken = ACCESS_TOKEN_SECRET
 
-    if (req.path === authPath+'/refreshToken'){
+    if (req.path === '/refreshToken'){
       verifyToken = REFRESH_TOKEN_SECRET
-    } else if(req.path === authPath+'/verifyUser') {
+    } else if(req.path === '/verifyUser') {
       verifyToken = VERIFY_TOKEN_SECRET
     }
 
@@ -38,13 +41,13 @@ export const authMiddleware = (roles = []) => {
         return res.status(401).json({
           errors : 'Unauthorized'
         })
-      } else if (!req.path.includes(authPath) && user.isVerified === false) {
+      } else if (!paths.includes(req.path) && user.isVerified === false) {
         return res.status(401).json({
           errors : "User's email is not verified"
         })
       }
       req.user = user;
+      next();
     })
-    next();
   }
 }

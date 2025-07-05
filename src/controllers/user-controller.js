@@ -82,7 +82,7 @@ const getUser = async (req, res, next) => {
 
 const updateUserDetail = async (req, res, next) => {
   try{
-    const result = await userService.updateUserDetail(req);
+    const result = await userService.updateUserDetail(req.body, req.user.email);
 
     res.status(200).json({
       success: true,

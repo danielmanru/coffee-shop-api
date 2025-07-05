@@ -1,12 +1,22 @@
 import supertest from "supertest";
 import { web } from "../src/config/web.js"
-import { removeTestUser, createTestUser } from "./test-util.js";
-import * as emailUtil from "../src/utils/mailer2.js";
+import * as emailUtil from "../src/utils/mailer.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {createTestUser, removeTestUser} from "./test-util.js";
+dotenv.config();
 
-const path = "/api/v1"
+const path = '/api/v1'
+beforeAll(async () => {
+  await mongoose.connect(process.env.MONGODB_URI);
+});
 
-jest.spyOn(emailUtil, "sendEmail").mockImplementation(() => Promise.resolve());
-describe(`POST  ${path}/users`, function () {
+afterAll(async () => {
+  await mongoose.disconnect();
+});
+
+vi.spyOn(emailUtil, "sendEmail").mockImplementation(() => Promise.resolve());
+describe(`POST  ${path}/register`, function () {
 
   afterEach(async ()=>{
     await removeTestUser();
@@ -16,22 +26,22 @@ describe(`POST  ${path}/users`, function () {
     const result = await supertest(web)
       .post(path+'/register')
       .send({
-        name: "Temalo",
-        email: "temalo7083@exitbit.com",
+        name: "Piceso",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg",
         phone: "081299998888",
         role: "customer"
       });
-
+    // const [to, subject, html] = emailUtil.sendEmail.mock.calls[0];
     expect(result.status).toBe(200);
     expect(result.body.success).toBe(true);
     expect(result.body.message).toBe("User registered successfully");
     expect(result.body.data._id).toBeDefined();
-    expect(result.body.data.name).toBe("Temalo");
-    expect(result.body.data.email).toBe("temalo7083@exitbit.com");
+    expect(result.body.data.name).toBe("Piceso");
+    expect(result.body.data.email).toBe("piceso3624@dxirl.com");
     expect(result.body.data.password).toBeUndefined();
     expect(emailUtil.sendEmail).toHaveBeenCalledWith(
-      "temalo7083@exitbit.com",
+      "piceso3624@dxirl.com",
       "Verify your email",
       expect.stringContaining("We are pleased to welcome you! To get started, please verify your email address by clicking the button below.")
     );
@@ -56,8 +66,8 @@ describe(`POST  ${path}/users`, function () {
     let result = await supertest(web)
       .post(path+'/register')
       .send({
-        name: "Temalo",
-        email: "temalo7083@exitbit.com",
+        name: "Piceso",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg",
         phone: "081299998888",
         role: "customer"
@@ -66,11 +76,11 @@ describe(`POST  ${path}/users`, function () {
     expect(result.body.success).toBe(true);
     expect(result.body.message).toBe("User registered successfully");
     expect(result.body.data._id).toBeDefined();
-    expect(result.body.data.name).toBe("Temalo");
-    expect(result.body.data.email).toBe("temalo7083@exitbit.com");
+    expect(result.body.data.name).toBe("Piceso");
+    expect(result.body.data.email).toBe("piceso3624@dxirl.com");
     expect(result.body.data.password).toBeUndefined();
     expect(emailUtil.sendEmail).toHaveBeenCalledWith(
-      "temalo7083@exitbit.com",
+      "piceso3624@dxirl.com",
       "Verify your email",
       expect.stringContaining("We are pleased to welcome you! To get started, please verify your email address by clicking the button below.")
     );
@@ -78,8 +88,8 @@ describe(`POST  ${path}/users`, function () {
     result = await supertest(web)
       .post(path+'/register')
       .send({
-        name: "Temalo",
-        email: "temalo7083@exitbit.com",
+        name: "Piceso",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg",
         phone: "081299998888",
         role: "customer"
@@ -90,9 +100,10 @@ describe(`POST  ${path}/users`, function () {
   });
 });
 
+
 describe(`POST ${path}/users/login`, function(){
-  beforeEach(async () =>{
-    await createTestUser("customer");
+  beforeEach(async() =>{
+    await createTestUser("customer")
   });
 
   afterEach(async () =>{
@@ -103,16 +114,17 @@ describe(`POST ${path}/users/login`, function(){
     const result = await supertest(web)
       .post(path+'/login')
       .send({
-        email: "temalo7083@exitbit.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
-
     expect(result.status).toBe(200);
     expect(result.body.success).toBe(true);
     expect(result.body.message).toBe("Login successfully");
     expect(result.body.data._id).toBeDefined();
-    expect(result.body.data.name).toBe("Temalo");
-    expect(result.body.data.email).toBe("temalo7083@exitbit.com");
+    expect(result.body.data.name).toBe("Piceso");
+    expect(result.body.data.email).toBe("piceso3624@dxirl.com");
+    expect(result.body.data.refreshToken).toBeDefined();
+    expect(result.body.data.accessToken).toBeDefined();
     expect(result.body.data.password).toBeUndefined();
   });
 
@@ -132,11 +144,12 @@ describe(`POST ${path}/users/login`, function(){
     const result = await supertest(web)
       .post(path+'/login')
       .send({
-        email : "hanyatester@gmail.com",
-        password : "M5gb#mpg"
+        email : "piceso3624@dxirl.com",
+        password : "B5gb#mpg"
       });
 
     expect(result.status).toBe(401);
+    expect(result.body.success).toBe(false);
     expect(result.body.errors).toBeDefined();
   });
 
@@ -144,14 +157,14 @@ describe(`POST ${path}/users/login`, function(){
     const result = await supertest(web)
       .post(path+'/login')
       .send({
-        email : "hanyatester11@gmail.com",
+        email : "piceso71083@exitbit.com",
         password : "K5gb#mpg"
       });
 
     expect(result.status).toBe(401);
+    expect(result.body.success).toBe(false);
     expect(result.body.errors).toBeDefined();
   });
-
 });
 
 describe(`GET ${path}/users`, function(){
@@ -167,10 +180,9 @@ describe(`GET ${path}/users`, function(){
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email: "temalo7083@exitbit.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
-
     const result = await supertest(web)
       .get(path+'/users/user')
       .set('Authorization', `Bearer ${login.body.data.accessToken}`)
@@ -178,8 +190,8 @@ describe(`GET ${path}/users`, function(){
     expect(result.status).toBe(200);
     expect(result.body.success).toBe(true);
     expect(result.body.message).toBe("Successfully get user data");
-    expect(result.body.data.email).toBe("temalo7083@exitbit.com");
-    expect(result.body.data.name).toBe("Temalo");
+    expect(result.body.data.email).toBe("piceso3624@dxirl.com");
+    expect(result.body.data.name).toBe("Piceso");
     expect(result.body.data.password).toBeUndefined();
     expect(result.body.data.phone).toBe("081299998888");
     expect(result.body.data.role).toBe("customer");
@@ -187,6 +199,10 @@ describe(`GET ${path}/users`, function(){
 });
 
 describe("authMiddleware", function(){
+  afterEach(async () =>{
+    await removeTestUser();
+  });
+
   it('should reject if token is invalid', async () =>{
     const result = await supertest(web)
       .get(path+'/users/user')
@@ -197,23 +213,19 @@ describe("authMiddleware", function(){
   });
 
   it('should reject if user role is not appropriate', async () =>{
-    beforeEach(async () =>{
-      await createTestUser("customer");
-    });
+    await createTestUser("customer");
 
-    afterEach(async () =>{
-      await removeTestUser();
-    });
 
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email: "temalo7083@exitbit.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
     const result = await supertest(web)
       .post(path+'/outlets/addOutlet')
+      .set('Authorization', `Bearer ${login.body.data.accessToken}`)
       .send({
         name: "testing",
         location: {
@@ -227,30 +239,24 @@ describe("authMiddleware", function(){
         },
         isActive: true
       })
-      .set('Authorization', `Bearer ${login.body.data.accessToken}`)
 
     expect(result.status).toBe(401);
     expect(result.body.errors).toBeDefined;
   });
 
   it('should reject if user is not verified', async () =>{
-    beforeEach(async () =>{
-      await createTestUser("admin");
-    });
-
-    afterEach(async () =>{
-      await removeTestUser();
-    });
+    await createTestUser("admin");
 
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email: "temalo7083@exitbit.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
     const result = await supertest(web)
       .post(path+'/outlets/addOutlet')
+      .set('Authorization', `Bearer ${login.body.data.accessToken}`)
       .send({
         name: "testing",
         location: {
@@ -264,7 +270,6 @@ describe("authMiddleware", function(){
         },
         isActive: true
       })
-      .set('Authorization', `Bearer ${login.body.data.accessToken}`)
 
     expect(result.status).toBe(401);
     expect(result.body.errors).toBeDefined;
@@ -284,15 +289,15 @@ describe(`PUT ${path}/users/updateUserDetail`, function(){
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email: "temalo7083@exitbit.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
     const update = await supertest(web)
       .put(path+'/users/updateUserDetail')
-      .set('Authorization', `Bearer ${login.body.data.token}`)
+      .set('Authorization', `Bearer ${login.body.data.accessToken}`)
       .send({
-        name : "Temalo",
+        name : "Piceso",
         phone : "081299998888",
         location : {
           alamat: "Jl.tester no1",
@@ -304,24 +309,22 @@ describe(`PUT ${path}/users/updateUserDetail`, function(){
 
     expect(update.status).toBe(200);
     expect(update.body.success).toBe(true);
-    expect(update.body.message).toBe("Successfully get user data");
-    expect(update.body.data.email).toBe("temalo7083@exitbit.com");
-    expect(update.body.data.name).toBe("Temalo");
+    expect(update.body.message).toBe("Successfully update user data");
+    expect(update.body.data.email).toBe("piceso3624@dxirl.com");
+    expect(update.body.data.name).toBe("Piceso");
     expect(update.body.data.password).toBeUndefined();
     expect(update.body.data.phone).toBe("081299998888");
-    expect(update.body.data.location.toBe({
-      alamat: "Jl.tester no1",
-      kecamatan: "testing kecamatan",
-      kelurahan: "testing kelurahan",
-      kota: "lampung"
-    }));
+    expect(update.body.data.location.alamat).toBe("Jl.tester no1");
+    expect(update.body.data.location.kecamatan).toBe("testing kecamatan");
+    expect(update.body.data.location.kelurahan).toBe("testing kelurahan");
+    expect(update.body.data.location.kota).toBe("lampung");
     expect(update.body.data.role).toBe("customer");
   });
 });
 
 describe(`PUT ${path}/users/changePassword`, function(){
   beforeEach(async () =>{
-    await createTestUser();
+    await createTestUser("customer");
   });
 
   afterEach(async () =>{
@@ -332,20 +335,20 @@ describe(`PUT ${path}/users/changePassword`, function(){
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email : "hanyatester@gmail.com",
-        password : "K5gb#mpg",
+        email: "piceso3624@dxirl.com",
+        password: "K5gb#mpg"
       });
 
     const update = await supertest(web)
       .put(path+'/users/changePassword')
-      .set('Authorization',`Bearer ${login.body.data.token}`)
+      .set('Authorization',`Bearer ${login.body.data.accessToken}`)
       .send({
         currentPassword : "K5gb#mpg",
         newPassword :  "M5gb#mpg",
       })
 
     expect(update.status).toBe(200);
-    expect(update.body.message).toBe("Successfully update user data");
+    expect(update.body.message).toBe("Successfully change password");
     expect(update.body.data.refreshToken).toBeDefined();
     expect(update.body.data.password).toBeUndefined();
   });
@@ -354,25 +357,25 @@ describe(`PUT ${path}/users/changePassword`, function(){
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email : "hanyatester@gmail.com",
-        password : "K5gb#mpg",
+        email: "piceso3624@dxirl.com",
+        password: "K5gb#mpg"
       });
 
     const update = await supertest(web)
       .put(path+'/users/changePassword')
-      .set('Authorization',`Bearer ${login.body.data.token}`)
+      .set('Authorization',`Bearer ${login.body.data.accessToken}`)
       .send({
         currentPassword : "J5gb#mpg",
         newPassword :  "M5gb#mpg",
       })
     expect(update.status).toBe(401);
-    expect(result.body.errors).toBeDefined;
+    expect(update.body.errors).toBeDefined;
   });
 });
 
 describe(`PUT ${path}+/users/logout` , function(){
   beforeEach(async () =>{
-    await createTestUser();
+    await createTestUser("customer");
   });
 
   afterEach(async () =>{
@@ -383,15 +386,16 @@ describe(`PUT ${path}+/users/logout` , function(){
     const login = await supertest(web)
       .post(path+'/login')
       .send({
-        email : "hanyatester@gmail.com",
-        password : "K5gb#mpg",
+        email: "piceso3624@dxirl.com",
+        password: "K5gb#mpg"
       });
 
     const logout = await supertest(web)
-      .put(path+'users/logout')
-      .set('Authorization',`Bearer ${login.body.data.token}`)
+      .put(path+'/users/logout')
+      .set('Authorization',`Bearer ${login.body.data.accessToken}`)
 
     expect(logout.status).toBe(200);
+    expect(logout.body.success).toBe(true);
     expect(logout.body.message).toBe("User successfully logged out");
     expect(logout.body.data).toBeNull();
   });

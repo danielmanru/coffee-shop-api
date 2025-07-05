@@ -60,7 +60,7 @@ const login = async(request) => {
     user._id,
     { $set: { refreshToken: refreshToken } },
   {new: true}
-  ).select("name email");
+  ).select("name email refreshToken");
 
   const userLogin = userLoginDoc.toObject()
   userLogin.accessToken = accessToken;
@@ -68,10 +68,10 @@ const login = async(request) => {
   return userLogin
 };
 
-const updateUserDetail = async (request) => {
-  const updateRequest = validate(updateUserValidation, request.body);
+const updateUserDetail = async (request, userEmail) => {
+  const updateRequest = validate(updateUserValidation, request);
   const searchUser = await User.findOneAndUpdate(
-    {email : request.user.email},
+    {email : userEmail},
     { $set: updateRequest },
     { new :true }
   ).select('-password -createdAt -updatedAt');
@@ -189,7 +189,7 @@ const resetPassword = async (request) => {
 const changePassword = async (request) => {
   const changePasswordRequest = validate(changePasswordValidation, request.body);
   const user =  await User.findOne({ email: request.user.email })
-    .select('email password role');
+    .select('email password role isVerified');
 
   if(!user){
     throw new ResponseError(404, "User is not found");
@@ -206,7 +206,8 @@ const changePassword = async (request) => {
 
   const payload = {
     email : user.email,
-    role : user.role
+    role : user.role,
+    isVerified: user.isVerified
   };
 
   const newRefreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn : "7d" })
@@ -221,8 +222,8 @@ const changePassword = async (request) => {
 };
 
 const logout = async (request) => {
-  const user = await User.findByIdAndUpdate(
-    user._id,
+  const user = await User.findOneAndUpdate(
+    {email : request.email},
     { $set: { refreshToken : "" } },
   )
 
