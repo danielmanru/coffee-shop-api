@@ -1,7 +1,6 @@
 import { validate } from "../validations/validation.js"
 import {
   getMenuByCategoryValidation,
-  getMenuByItsAvailabilityValidation,
   addMenuValidation,
   updateMenuValidation,
 } from "../validations/menu-validation.js"
@@ -10,22 +9,29 @@ import {ResponseError} from "../error/response-error.js";
 import idValidation from "../validations/id-validation.js";
 
 const getAllMenus = async() => {
-   return Menu.find( {} );
+   return Menu.find( {} ).select("-createdAt -updatedAt -__v");
 }
 
 const getMenuByCategory = async(request) => {
   const req = validate(getMenuByCategoryValidation, request);
-  return Menu.find( { category : req } );
+  const menus = await Menu.find( { category : req } ).select("-createdAt -updatedAt -__v");
+  if (!menus) {
+    throw new ResponseError(404, `Menus with category ${req} are not found!`);
+  }
+  return menus;
 }
 
-const getMenuByItsAvailability = async(request) => {
-  const req = validate(getMenuByItsAvailabilityValidation, request);
-  return Menu.find( { isAvailable: req } );
+const getAvailableMenu = async() => {
+  const menus = await Menu.find( { isAvailable: true } ).select("-createdAt -updatedAt -__v");
+  if(!menus){
+    throw new ResponseError(404, `All menus are unavailable!`);
+  }
+  return menus;
 }
 
 const getMenuById = async (menuId) => {
   const menu_id = validate(idValidation, menuId);
-  const menu = await Menu.findById(menu_id);
+  const menu = await Menu.findById(menu_id).select("-createdAt -updatedAt -__v");
   if (!menu) {
     throw new ResponseError(404, 'Menu is not found!');
   }
@@ -50,7 +56,8 @@ const updateMenu = async(request, menuId) => {
     menu_id,
     { $set: req },
     { new: true }
-  );
+  ).select("-createdAt -updatedAt -__v");
+
   if (!menu) {
     throw new ResponseError(404, 'Menu is not found!');
   }
@@ -72,7 +79,7 @@ const deleteMenu = async(menuId) => {
 export default {
   addMenu,
   getMenuByCategory,
-  getMenuByItsAvailability,
+  getAvailableMenu,
   getMenuById,
   getAllMenus,
   updateMenu,

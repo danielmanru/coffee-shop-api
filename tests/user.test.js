@@ -59,6 +59,7 @@ describe(`POST  ${path}/register`, function () {
       });
 
     expect(result.status).toBe(400);
+    expect(result.body.success).toBe(false);
     expect(result.body.errors).toBeDefined;
   });
 
@@ -96,6 +97,7 @@ describe(`POST  ${path}/register`, function () {
       });
 
     expect(result.status).toBe(400);
+    expect(result.body.success).toBe(false);
     expect(result.body.errors).toBeDefined;
   });
 });
@@ -137,6 +139,7 @@ describe(`POST ${path}/users/login`, function(){
       });
 
     expect(result.status).toBe(400);
+    expect(result.body.success).toBe(false);
     expect(result.body.errors).toBeDefined();
   });
 
@@ -212,7 +215,7 @@ describe("authMiddleware", function(){
     expect(result.body.errors).toBeDefined;
   });
 
-  it('should reject if user role is not appropriate', async () =>{
+  it('should reject if user role is inappropriate', async () =>{
     await createTestUser("customer");
 
 
@@ -369,6 +372,7 @@ describe(`PUT ${path}/users/changePassword`, function(){
         newPassword :  "M5gb#mpg",
       })
     expect(update.status).toBe(401);
+    expect(update.body.success).toBe(false);
     expect(update.body.errors).toBeDefined;
   });
 });

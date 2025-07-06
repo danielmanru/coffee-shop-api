@@ -1,15 +1,14 @@
 import express from "express";
 import menuController from "../controllers/menu-controller.js";
 import { authMiddleware } from "../middlewares/auth-middleware.js";
-import upload from "../middlewares/multer-middleware.js";
 
 const menuRouter = new express.Router();
 menuRouter.get('/', menuController.getAllMenus)
 menuRouter.post('/addMenu', authMiddleware(["admin"]), menuController.addMenu)
-menuRouter.get('/getMenuByCategory', menuController.getMenuByCategory)
-menuRouter.get('/getMenuByItsAvailability', menuController.getMenuByItsAvailability)
-menuRouter.get('/getMenuById', menuController.getMenuById)
-menuRouter.put('/updateMenu/:menuId', authMiddleware(["admin"]),menuController.updateMenu)
-menuRouter.delete('/deleteMenu/:menuId', authMiddleware(["admin"]),menuController.updateMenu)
+menuRouter.get('/getMenuByCategory/:category', menuController.getMenuByCategory)
+menuRouter.get('/getAvailableMenu', menuController.getAvailableMenu)
+menuRouter.get('/getMenuById/:menuId', menuController.getMenuById)
+menuRouter.put('/updateMenu', authMiddleware(["admin"]),menuController.updateMenu)
+menuRouter.delete('/deleteMenu', authMiddleware(["admin"]),menuController.deleteMenu)
 
 export default  menuRouter;
