@@ -50,7 +50,7 @@ const outletSchema = new Schema({
   },
   images: {
     type: [imagesSchema],
-    default: null
+    default: []
   },
   openingHours: {
     type: openingHoursSchema,

@@ -8,12 +8,12 @@ import {ResponseError} from "../error/response-error.js";
 import idValidation from "../validations/id-validation.js";
 
 const getAllOutlet = async (request) => {
-  const outlets = await Outlet.find( {} );
+  return Outlet.find( {} ).select("-createdAt -updatedAt -__v");
 }
 
 const getOutletById = async (outletId) => {
   const outlet_id = validate(idValidation, outletId);
-  const outlet = await Outlet.findById(outlet_id);
+  const outlet = await Outlet.findById(outlet_id).select("-createdAt -updatedAt -__v");
 
   if(!outlet) {
     throw new ResponseError(404, "Outlet not found");
@@ -28,7 +28,7 @@ const searchOutlet = async (request) => {
   const outlets = await Outlet.find(
     { $text: { $search: req } },
     { score: {$meta: "textScore" } }
-  ).sort( { score: { $meta: "textScore" } });
+  ).sort( { score: { $meta: "textScore" } }).select("-createdAt -updatedAt -__v");
 
   if(!outlets) {
     throw new ResponseError(404, "Outlet not found");
@@ -38,14 +38,14 @@ const searchOutlet = async (request) => {
 }
 
 const addOutlet = async (request) => {
-  const req = validate(addAndUpdateOutletValidation(request));
+  const req = validate(addAndUpdateOutletValidation, request);
   const outlet = await Outlet.exists( { name: req.name });
 
   if(outlet) {
-    throw ResponseError(400, "Outlet already exists");
+    throw new ResponseError(400, "Outlet already exists");
   }
-
-  return Outlet.create(req);
+  const outletCreated = await Outlet.create(req);
+  return Outlet.findById(outletCreated._id).select("-createdAt -updatedAt -__v");
 }
 
 const updateOutlet = async (request, outletId) => {
@@ -54,8 +54,8 @@ const updateOutlet = async (request, outletId) => {
   const updatedOutlet = await Outlet.findByIdAndUpdate(
     outlet_id,
     { $set: req },
-    {$new: true}
-  );
+    { new: true }
+  ).select("-createdAt -updatedAt -__v");
 
   if(!updatedOutlet) {
     throw new ResponseError(404, "Outlet not found");
@@ -66,7 +66,7 @@ const updateOutlet = async (request, outletId) => {
 
 const deleteOutlet = async (outletId) => {
   const outlet_id = validate(idValidation, outletId);
-  const outlet = await Outlet.findByIdAndDelete(outlet_id);
+  const outlet = await Outlet.findByIdAndDelete(outlet_id).select("-createdAt -updatedAt -__v");
 
   if(!outlet) {
     throw new ResponseError(404, "Outlet not found");
@@ -74,7 +74,6 @@ const deleteOutlet = async (outletId) => {
 
   return null;
 }
-
 
 export default {
   getAllOutlet,

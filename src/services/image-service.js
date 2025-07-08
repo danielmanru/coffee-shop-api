@@ -1,13 +1,25 @@
 import uploadImages from "../utils/assets-uploader.js";
 import newCloudinary from "../config/cloudinary-config.js";
 import {validate} from "../validations/validation.js";
-import Menu from "../models/menu.model.js";
 import {ResponseError} from "../error/response-error.js";
 import {addImagesValidation, deleteImagesValidation} from "../validations/image-validation.js";
+import Menu from "../models/menu.model.js";
+import Outlet from "../models/outlet.model.js";
 
-const addImages = async(menuId, files, folderName) => {
+const addImages = async(itemId, files, modelName) => {
+  let folderName;
+  let Model;
+  if (modelName === "Menu") {
+    folderName = "menu-assets";
+    Model = Menu;
+  } else if (modelName === "Outlet") {
+    folderName = "outlet-assets";
+    Model = Outlet;
+  }
+
   const request = {
-    menu_id: menuId,
+    item_id: itemId,
+    model_name: modelName,
     asset_folder: folderName,
     image_metadata: []
   }
@@ -16,16 +28,16 @@ const addImages = async(menuId, files, folderName) => {
     originalname: file.originalname,
     mimetype: file.mimetype,
     size: file.size,}))
-  validate(addImagesValidation, request)
-  const imagesUploaded = await uploadImages(files, folderName);
+  const req = validate(addImagesValidation, request)
+  const imagesUploaded = await uploadImages(files, req.asset_folder);
 
   const imagesToInsert = imagesUploaded.map((image) => ({
     url: image.secure_url,
     publicId: image.public_id,
   }));
 
-  const updatedImages = await Menu.findByIdAndUpdate(
-    menuId,
+  const updatedImages = await Model.findByIdAndUpdate(
+    itemId,
     {
       $push: {
         images : {
@@ -34,25 +46,32 @@ const addImages = async(menuId, files, folderName) => {
       }
     },
     { new: true }
-  );
+  ).select("-createdAt -updatedAt -__v");
 
   if(!updatedImages) {
-    throw new ResponseError(404, 'Menu is not found!');
+    throw new ResponseError(404, `${modelName} is not found!`);
   }
 
   return updatedImages;
 }
 
-const deleteImages = async(menuId, publicIds,) => {
+const deleteImages = async(itemId, publicIds, modelName) => {
+  let Model;
+  if (modelName === "Menu") {
+    Model = Menu;
+  } else if (modelName === "Outlet") {
+    Model = Outlet;
+  }
   const req = validate(deleteImagesValidation, {
-    menuId  : menuId,
-    publicIds : publicIds,
+    item_id  : itemId,
+    model_name: modelName,
+    publicIds : publicIds
   });
 
   req.publicIds.map(async(publicId) => await newCloudinary.uploader.destroy(publicId));
 
-  const updatedImages = await Menu.findByIdAndUpdate(
-    req.menuId,
+  const updatedImages = await Model.findByIdAndUpdate(
+    itemId,
     {
       $pull: {
         images : {
@@ -61,10 +80,10 @@ const deleteImages = async(menuId, publicIds,) => {
       }
     },
     { new: true }
-  );
+  ).select("-createdAt -updatedAt -__v");
 
   if(!updatedImages) {
-    throw new ResponseError(404, 'Menu is not found!');
+    throw new ResponseError(404, `${modelName} is not found!`);
   }
 
   return updatedImages;

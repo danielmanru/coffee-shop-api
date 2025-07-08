@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import User from "../src/models/user.model.js";
 import Menu from "../src/models/menu.model.js";
+import Outlet from "../src/models/outlet.model.js";
 
 const removeTestUser = async () => {
   await User.deleteOne({email: "piceso3624@dxirl.com"})
@@ -25,10 +26,10 @@ const removeTestMenu = async (menuId, menuName = "") => {
 }
 
 
-const createTestMenu = async (role) => {
+const createTestMenu = async () => {
   return Menu.create({
-    name: "Americano",
-    description: "Kopi hitam nyaman diminum",
+    name: "Caramel Macchiato",
+    description: "Kopi karamel nyaman diminum",
     category: "coffee",
     isAvailable: true,
     variants: [
@@ -47,6 +48,30 @@ const createTestMenu = async (role) => {
   })
 }
 
+const removeTestOutlet = async (outletId, outletName = "") => {
+  if (outletName != "") {
+    return Outlet.deleteOne({name: outletName});
+  }
+    return Outlet.findByIdAndDelete(outletId);
+}
+
+
+const createTestOutlet = async () => {
+  return Outlet.create({
+    name: "Ringroad Medan",
+    location: {
+      alamat: "Jl. Ringroad No. 114",
+      kecamatan: "Medan Sunggal",
+      kelurahan: "Tanjung Sari"
+    },
+    openingHours: {
+      open: "08:00",
+      close: "22:00"
+    },
+    isActive:true
+  })
+}
+
 const verifyUser = async () => {
   await User.findOneAndUpdate({email: "piceso3624@dxirl.com"},
     { $set: {isVerified: true} });
@@ -58,4 +83,6 @@ export{
   verifyUser,
   createTestMenu,
   removeTestMenu,
+  createTestOutlet,
+  removeTestOutlet,
 }

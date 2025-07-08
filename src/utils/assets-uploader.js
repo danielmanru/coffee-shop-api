@@ -6,12 +6,14 @@ const limit = pLimit(10);
 
 const singleUpload = async (file, folderName) => {
   return new Promise((resolve, reject) => {
+    console.log(typeof folderName)
     const uploadStream = newCloudinary.uploader.upload_stream(
       {
-        asset_folder: folderName,
+        asset_folder: `coffee_shop_assets/${folderName}`,
         display_name: file.originalname,
-        public_id: file.originalname,
-        use_asset_folder_as_public_id_prefix : true
+        use_filename : true,
+        use_asset_folder_as_public_id_prefix : true,
+        unique_filename: true
       },
       (err, result) => {
         if (err) return reject(err);
@@ -22,10 +24,10 @@ const singleUpload = async (file, folderName) => {
   })
 }
 
-const uploadImages = async (files) => {
+const uploadImages = async (files, folderName) => {
   const uploads = files.map((file) => {
     return limit(async () => {
-      const result = await singleUpload(file);
+      const result = await singleUpload(file, folderName);
       return result;
     })
   });

@@ -2,15 +2,19 @@ import supertest from "supertest";
 import { web } from "../src/config/web.js"
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import {createTestMenu, removeTestMenu} from "./test-util.js";
+import {createTestMenu, createTestUser, removeTestMenu, removeTestUser, verifyUser} from "./test-util.js";
 dotenv.config();
 
 const path = '/api/v1/menus'
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGODB_URI);
+  await createTestUser("admin");
+  await verifyUser();
+
 });
 
 afterAll(async () => {
+  await removeTestUser();
   await mongoose.disconnect();
 });
 
@@ -23,7 +27,7 @@ describe(`POST  ${path}/addMenu`, function () {
     const login = await supertest(web)
       .post('/api/v1/login')
       .send({
-        email: "manurungd025@gmail.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
@@ -78,7 +82,7 @@ describe(`POST  ${path}/addMenu`, function () {
     const login = await supertest(web)
       .post('/api/v1/login')
       .send({
-        email: "manurungd025@gmail.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
@@ -297,7 +301,7 @@ describe(`PUT  ${path}/updateMenu`, function () {
     const login = await supertest(web)
       .post('/api/v1/login')
       .send({
-        email: "manurungd025@gmail.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
@@ -363,7 +367,7 @@ describe(`DELETE ${path}/deleteMenu`, function () {
     const login = await supertest(web)
       .post('/api/v1/login')
       .send({
-        email: "manurungd025@gmail.com",
+        email: "piceso3624@dxirl.com",
         password: "K5gb#mpg"
       });
 
