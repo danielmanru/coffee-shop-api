@@ -4,6 +4,7 @@ import publicRouter from "./public-api.js";
 import menuRouter from "./menu-api.js";
 import outletRouter from "./outlet-api.js";
 import imageRouter from "./image-api.js";
+import cartRouter from "./cart-api.js";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.use('/users', userRouter);
 router.use('/menus', menuRouter);
 router.use('/outlets', outletRouter);
 router.use('/images', imageRouter);
+router.use('/cart', cartRouter);
 
 
 export default router;
