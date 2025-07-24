@@ -15,6 +15,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { getEmailHtml, sendEmail } from '../utils/mailer.js';
 import User from "../models/user.model.js";
+import cartService from "./cart-service.js";
 
 const { ACCESS_TOKEN_SECRET, VERIFY_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
 
@@ -31,6 +32,8 @@ const register = async(request) => {
   await sendVerificationEmail(user.email)
 
   const userCreated = await User.create(user);
+  await cartService.initializeNewCart(userCreated._id)
+
   return User.findById(userCreated._id).select('name email');
 };
 
@@ -48,7 +51,7 @@ const login = async(request) => {
   }
 
   const payload = {
-    name: user.name,
+    _id: user._id,
     email: user.email,
     role: user.role,
     isVerified: user.isVerified,
@@ -60,7 +63,7 @@ const login = async(request) => {
     user._id,
     { $set: { refreshToken: refreshToken } },
   {new: true}
-  ).select("name email refreshToken");
+  ).select("refreshToken");
 
   const userLogin = userLoginDoc.toObject()
   userLogin.accessToken = accessToken;

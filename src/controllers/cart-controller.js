@@ -41,7 +41,7 @@ const increaseQuantity = async(req, res, next) => {
 
 const decreaseQuantity = async(req, res, next) => {
   try {
-    const result = await cartService.increaseQuantity(req.user._id, req.params.cartItemId);
+    const result = await cartService.decreaseQuantity(req.user._id, req.params.cartItemId);
     return res.status(200).json({
       success: true,
       message: "Success!",

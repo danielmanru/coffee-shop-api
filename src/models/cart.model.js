@@ -9,12 +9,30 @@ const cartItemSchema = new Schema({
   temperature: {
     type: String,
     required: true,
-    enum: ['HOT', 'COLD']
+    enum: ['hot', 'cold']
   },
   iceLevel: {
     type: String,
     required: true,
-    enum: ['NO_ICE', 'LESS_ICE', 'REGULAR_ICE']
+    enum: ['no_ice', 'less_ice', 'regular_ice'],
+    validate: {
+      validator: function (value) {
+        if (this.temperature === 'hot' && value !== 'no_ice') {
+          return false
+        }
+        return true;
+      },
+      message: props => "if  the temperature is 'hot', then ice level must be 'no_ice'"
+    }
+  },
+  variant: {
+    type: String,
+    required: true,
+    enum: ['small', 'regular', 'large']
+  },
+  price: {
+    type: Number,
+    required: true,
   },
   quantity: {
     type: Number,
@@ -30,11 +48,21 @@ const cartSchema = new Schema({
     unique: true,
     ref: 'User'
   },
-  menu: {
+  items: {
     type: [cartItemSchema],
     default: [],
   },
-}, { timestamps: true });
+  totalPrice: {
+    type: Number,
+    default: 0
+  }
+}, {timestamps: true});
+
+cartSchema.methods.calculateTotalPrice = function () {
+  return this.items.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0);
+};
 
 const Cart = model("Cart", cartSchema);
 

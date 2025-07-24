@@ -1,79 +1,69 @@
 import Cart from "../models/cart.model.js";
 import {ResponseError} from "../error/response-error.js";
+import Menu from "../models/menu.model.js";
 
 const initializeNewCart = async (user_id) => {
   await Cart.create({userId: user_id});
 }
 
 const getUserCart = async (user_id) => {
-  const userCart = await Cart.find({userId: user_id});
+  const userCart = await Cart.findOne({userId: user_id});
 
   if (!userCart) {
-    throw new ResponseError("Cart not found");
+    throw new ResponseError(404,"Cart not found");
   }
 
   return userCart;
 }
 
 const addItemToCart = async (request) => {
-  const existingCart = await Cart.find({userId: request.user._id});
-
-  if (!existingCart) {
-    await initializeNewCart(request.user._id);
-  }
-
   let userCart = await getUserCart(request.user._id);
 
-  const existingCartItem = await Cart.find({
-    $and: [
-      {userId: request.user._id},
-      {
-        menu: {
-          $elemMatch: {
-            menuId: request.body.menu.menuId,
-            temperature: request.body.menu.temperature,
-            iceLevel: request.body.menu.iceLevel
-          }
-        }
-      }
-    ]
-  })
+  const existingCartItem = await userCart.items.find(item =>
+    item.menuId.equals(request.body.menuId) &&
+    item.temperature === request.body.temperature &&
+    item.iceLevel === request.body.iceLevel &&
+    item.variant === request.body.variant
+  );
 
   if (existingCartItem) {
-    existingCartItem.menu.quantity += 1;
-    await existingCartItem.save();
+    existingCartItem.quantity += 1;
+  } else {
+    const menu = await Menu.findById(request.body.menuId)
+    if(!menu) {
+      throw new ResponseError(404, "Menu not found");
+    }
+
+    const menuPrice = menu.variants.find(variant => variant.size === request.body.variant)?.price
+
+    userCart.items.push({...request.body, price: menuPrice, quantity: 1});
   }
 
-  request.body.menu.quantity = 1;
-  userCart.menu.push(request.body);
+  userCart.totalPrice = userCart.calculateTotalPrice();
+
   return userCart.save();
 }
 
 const increaseQuantity = async (user_id, cartItemId) => {
   const userCart = await getUserCart(user_id);
-  if(!userCart) {
-    throw new ResponseError("Cart not found");
-  }
 
-  const menu = userCart.menu.id(cartItemId);
+  const menu = userCart.items.id(cartItemId);
   if (!menu) {
-    throw new ResponseError("Cart item not found");
+    throw new ResponseError(404, "Cart item not found");
   }
 
   menu.quantity += 1;
+  userCart.totalPrice = userCart.calculateTotalPrice();
 
   return userCart.save();
 }
 
 const decreaseQuantity = async (user_id, cartItemId) => {
   const userCart = await getUserCart(user_id);
-  if(!userCart) {
-    throw new ResponseError("Cart not found");
-  }
 
-  const menu = userCart.menu.id(cartItemId);
+  const menu = userCart.items.id(cartItemId);
   if (!menu) {
-    throw new ResponseError("Cart item not found");
+    throw new ResponseError(404, "Cart item not found");
   }
 
   if(menu.quantity === 1) {
@@ -81,28 +71,28 @@ const decreaseQuantity = async (user_id, cartItemId) => {
   }
 
   menu.quantity -= 1;
+  userCart.totalPrice = userCart.calculateTotalPrice();
 
   return userCart.save();
 }
 
 const deleteCartItem = async (user_id, cartItemId) => {
   const userCart = await getUserCart(user_id);
-  if(!userCart) {
-    throw new ResponseError("Cart not found");
-  }
 
-  const menu = userCart.menu.id(cartItemId);
+  const menu = userCart.items.id(cartItemId);
   if (!menu) {
-    throw new ResponseError("Cart item not found");
+    throw new ResponseError(404, "Cart item not found");
   }
 
-  menu.remove();
+  userCart.items.pull({ _id: cartItemId });
+  userCart.totalPrice = userCart.calculateTotalPrice();
 
   return userCart.save();
 }
 
 export default {
   getUserCart,
+  initializeNewCart,
   addItemToCart,
   increaseQuantity,
   decreaseQuantity,
