@@ -45,6 +45,20 @@ export const authMiddleware = (roles = []) => {
         return res.status(401).json({
           errors : "User's email is not verified"
         })
+      } else if (req.path === '/update/status') {
+        if (user.role === 'customer' && req.query.orderStatus !== "cancelled"){
+          return res.status(401).json({
+            errors : "Customer only can update status to cancelled"
+          })
+        } else if(user.role === 'staff' && req.query.orderStatus === "on_delivery"){
+          return res.status(401).json({
+            errors : "Staff can't update status to on_delivery"
+          })
+        } else if(user.role === 'admin' && req.query.orderStatus !== "on_delivery"){
+          return res.status(401).json({
+            errors : "Admin can only update status to on_delivery"
+          })
+        }
       }
       req.user = user;
       next();

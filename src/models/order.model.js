@@ -8,25 +8,38 @@ const orderItemSchema = new Schema({
     required: true,
     ref: 'Menu'
   },
-  name: {
+  temperature: {
     type: String,
-    required: true
+    required: true,
+    enum: ['hot', 'cold']
+  },
+  iceLevel: {
+    type: String,
+    required: true,
+    enum: ['no_ice', 'less_ice', 'regular_ice'],
+    validate: {
+      validator: function (value) {
+        return !(this.temperature === 'hot' && value !== 'no_ice');
+
+      },
+      message: props => "if  the temperature is 'hot', then ice level must be 'no_ice'"
+    }
   },
   variant: {
     type: String,
-    required: true
-  },
-  quantity: {
-    type: Number,
     required: true,
-    min: 1
+    enum: ['small', 'regular', 'large']
   },
   price: {
     type: Number,
     required: true,
-    min: 0
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: [1, 'Quantity must be greater than 0']
   }
-}, { _id: false });
+}, {_id: false});
 
 const orderSchema = new Schema({
   userId: {
@@ -34,36 +47,43 @@ const orderSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  storeId: {
+  outletId: {
     type: Types.ObjectId,
     required: true,
-    ref: 'Store'
+    ref: 'Outlet'
   },
   items: {
     type: [orderItemSchema],
     required: true,
   },
-  deliveryFee:{
+  orderType: {
+    type: String,
+    enum: ['delivery', 'pick_up', 'dine_in'],
+    required: true
+  },
+  deliveryFee: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   totalPrice: {
     type: Number,
     required: true,
-    min: 0
+    min: [0, "total price should be greater than 0"]
   },
   status: {
     type: String,
-    enum: ['pending', 'cancelled', 'completed'],
+    enum: ['pending', 'in_progress', 'on_delivery', 'cancelled', 'completed'],
     default: 'pending'
-  },
-  orderType: {
-    type: String,
-    enum: ['delivery', 'pick-up', 'dine-in'],
-    required: true
   }
-}, { timestamps: true });
+
+}, {timestamps: true});
+
+orderSchema.methods.calculateTotalPrice = function () {
+  return this.items.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0) + this.deliveryFee;
+};
 
 const Order = model('Order', orderSchema);
 

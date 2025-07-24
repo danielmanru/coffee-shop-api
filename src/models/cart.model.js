@@ -17,10 +17,8 @@ const cartItemSchema = new Schema({
     enum: ['no_ice', 'less_ice', 'regular_ice'],
     validate: {
       validator: function (value) {
-        if (this.temperature === 'hot' && value !== 'no_ice') {
-          return false
-        }
-        return true;
+        return !(this.temperature === 'hot' && value !== 'no_ice');
+
       },
       message: props => "if  the temperature is 'hot', then ice level must be 'no_ice'"
     }
