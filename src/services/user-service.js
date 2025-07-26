@@ -24,7 +24,7 @@ const register = async(request) => {
   const countUser =  await User.countDocuments({ email: user.email });
 
   if(countUser === 1){
-    throw new ResponseError(400, "Email already registered");
+    throw new ResponseError(409, "Email already registered");
   }
 
   user.password = await bcrypt.hash(user.password, 10);

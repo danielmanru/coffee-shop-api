@@ -6,6 +6,7 @@ import outletRouter from "./outlet-api.js";
 import imageRouter from "./image-api.js";
 import cartRouter from "./cart-api.js";
 import orderRouter from "./order-api.js";
+import paymentRouter from "./payment-api.js";
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.use('/outlets', outletRouter);
 router.use('/images', imageRouter);
 router.use('/cart', cartRouter);
 router.use('/orders', orderRouter);
+router.use('/payment', paymentRouter);
 
 
 export default router;

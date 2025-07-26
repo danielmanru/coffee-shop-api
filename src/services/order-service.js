@@ -1,6 +1,7 @@
 import Order from "../models/order.model.js";
 import {ResponseError} from "../error/response-error.js";
 import Menu from "../models/menu.model.js";
+import cartService from "./cart-service.js";
 
 const getUserOrder = async (user_id) => {
   const userOrders = await Order.find({userId: user_id});
@@ -31,22 +32,18 @@ const createOrder = async (request) => {
     throw new ResponseError(400, `'deliveryFee' must be more than 0 for 'delivery' orders`);
   }
   req.userId = request.user._id
-  req.items = await Promise.all(
-    req.items.map(async (item) => {
-      const menu = await Menu.findById(item.menuId);
-      if (!menu) {
-        throw new ResponseError(404, "Menu not found");
-      }
-
-      const menuPrice = menu.variants.find(variant => variant.size === item.variant)?.price;
-
-      return {
-        ...item,
-        price: menuPrice
-      };
-    })
-  )
   const order = new Order(req);
+  const error = order.validateSync(['userId']);
+
+  if (error) {
+    throw new ResponseError(400, error.message)
+  }
+
+  const userCart = await cartService.getUserCart(order.userId)
+  if (!userCart.items.length) {
+    throw new ResponseError(404, "Cart is empty");
+  }
+  order.items = userCart.items;
   order.totalPrice = order.calculateTotalPrice();
   order.status = "pending";
 

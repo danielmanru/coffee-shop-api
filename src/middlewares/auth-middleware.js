@@ -21,7 +21,7 @@ export const authMiddleware = (roles = []) => {
     }
 
     validate(tokenValidation, token)
-    const paths = userRouter.stack
+    const userPaths = userRouter.stack
       .map(layer => layer.route?.path)
       .filter(Boolean);
     let verifyToken = ACCESS_TOKEN_SECRET
@@ -41,22 +41,28 @@ export const authMiddleware = (roles = []) => {
         return res.status(401).json({
           errors : 'Unauthorized'
         })
-      } else if (!paths.includes(req.path) && user.isVerified === false) {
+      } else if (!userPaths.includes(req.path) && user.isVerified === false) {
         return res.status(401).json({
           errors : "User's email is not verified"
         })
-      } else if (req.path === '/update/status') {
+      } else if (req.baseUrl.includes("/orders") && req.path === '/update/status') {
         if (user.role === 'customer' && req.query.orderStatus !== "cancelled"){
           return res.status(401).json({
-            errors : "Customer only can update status to cancelled"
+            errors : "Unauthorized"
           })
         } else if(user.role === 'staff' && req.query.orderStatus === "on_delivery"){
           return res.status(401).json({
-            errors : "Staff can't update status to on_delivery"
+            errors : "Unauthorized"
           })
         } else if(user.role === 'admin' && req.query.orderStatus !== "on_delivery"){
           return res.status(401).json({
-            errors : "Admin can only update status to on_delivery"
+            errors : "Unauthorized"
+          })
+        }
+      } else if(req.baseUrl.includes("/payment") && req.path === '/update/status') {
+        if(user.role === 'customer' && req.query.paymentStatus !== "cancelled"){
+          return res.status(401).json({
+            errors : "Unauthorized"
           })
         }
       }
