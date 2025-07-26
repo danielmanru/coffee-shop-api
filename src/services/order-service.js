@@ -3,7 +3,19 @@ import {ResponseError} from "../error/response-error.js";
 import Menu from "../models/menu.model.js";
 import cartService from "./cart-service.js";
 
-const getUserOrder = async (user_id) => {
+const getAllOrders = async () => {
+  return Order.find({});
+}
+
+const getOrdersByOutletId = async (outlet_id) => {
+  if(typeof outlet_id !== 'string'){
+    throw new ResponseError(400, "outlet_id is invalid");
+  }
+
+  return Order.find({outletId: outlet_id});
+}
+
+const getUserOrders = async (user_id) => {
   const userOrders = await Order.find({userId: user_id});
   if (!userOrders.length) {
     throw new ResponseError(404, "User not order yet");
@@ -63,7 +75,9 @@ const updateOrderStatus = async (order_id, order_status) => {
 
 export default {
   getOrderById,
-  getUserOrder,
+  getAllOrders,
+  getUserOrders,
   createOrder,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrdersByOutletId
 }

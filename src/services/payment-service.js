@@ -2,6 +2,19 @@ import Payment from "../models/payment.model.js";
 import Order from "../models/order.model.js";
 import {ResponseError} from "../error/response-error.js";
 
+const getAllPayments = async () => {
+  return Payment.find({});
+}
+
+const getPaymentByOrderId = async (order_id) => {
+  const payment = await Payment.findOne({orderId: order_id})
+  if(!payment) {
+    throw new ResponseError(404, "Payment not found");
+  }
+
+  return payment;
+}
+
 const addPayment = async (request) => {
   const req = request.body;
   req.userId = request.user._id;
@@ -48,23 +61,20 @@ const updatePaymentStatus = async (request) => {
     payment.paymentReceipt = request.body;
     await payment.save();
   }
-  const payment = await Payment.findOneAndUpdate(
-    {orderId: request.query.orderId},
-    {$set: {status: request.query.paymentStatus}},
-    {
-      runValidators: true,
-      context: 'query'
-    }
-  )
 
-  if (!payment) {
-    throw new ResponseError(404, 'Payment not found');
+  const payment = await getPaymentByOrderId(request.query.orderId);
+  if (payment.status !== 'unpaid') {
+    throw new ResponseError(409, 'Payment status already updated');
   }
+  payment.status = request.query.paymentStatus;
+  await payment.save();
 
   return null
 }
 
 export default {
   addPayment,
-  updatePaymentStatus
+  updatePaymentStatus,
+  getAllPayments,
+  getPaymentByOrderId
 }

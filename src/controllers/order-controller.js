@@ -1,8 +1,34 @@
 import orderService from "../services/order-service.js";
 
-const getUserOrder = async ( req, res, next ) => {
+const getUserOrders = async ( req, res, next ) => {
   try {
-    const result = await orderService.getUserOrder(req.user._id);
+    const result = await orderService.getUserOrders(req.user._id);
+    return res.status(200).json({
+      success: true,
+      message: "Success!",
+      data: result
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getOrdersByUserId = async ( req, res, next ) => {
+  try {
+    const result = await orderService.getUserOrders(req.params.userId);
+    return res.status(200).json({
+      success: true,
+      message: "Success!",
+      data: result
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getOrdersByOutletId = async ( req, res, next ) => {
+  try {
+    const result = await orderService.getOrdersByOutletId(req.params.outletId);
     return res.status(200).json({
       success: true,
       message: "Success!",
@@ -53,8 +79,10 @@ const updateOrderStatus = async ( req, res, next ) => {
 }
 
 export default {
-  getUserOrder,
+  getUserOrders,
   getOrderById,
   createOrder,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrdersByUserId,
+  getOrdersByOutletId
 }

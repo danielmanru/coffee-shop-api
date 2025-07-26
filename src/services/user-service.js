@@ -16,6 +16,7 @@ import jwt from "jsonwebtoken";
 import { getEmailHtml, sendEmail } from '../utils/mailer.js';
 import User from "../models/user.model.js";
 import cartService from "./cart-service.js";
+import Outlet from "../models/outlet.model.js";
 
 const { ACCESS_TOKEN_SECRET, VERIFY_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
 
@@ -33,6 +34,14 @@ const register = async(request) => {
 
   const userCreated = await User.create(user);
   await cartService.initializeNewCart(userCreated._id)
+  if(user.role === 'staff') {
+    const outlet = await Outlet.findById(request.query.outletId);
+    outlet.staff.push({
+      staffId: userCreated._id,
+      isActive: true
+    })
+    await outlet.save();
+  }
 
   return User.findById(userCreated._id).select('name email');
 };

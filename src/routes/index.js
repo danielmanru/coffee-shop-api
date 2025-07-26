@@ -27,7 +27,7 @@ router.use('/outlets', outletRouter);
 router.use('/images', imageRouter);
 router.use('/cart', cartRouter);
 router.use('/orders', orderRouter);
-router.use('/payment', paymentRouter);
+router.use('/payments', paymentRouter);
 
 
 export default router;

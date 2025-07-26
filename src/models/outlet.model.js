@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const {Schema, model} = mongoose;
+const {Schema, model, Types} = mongoose;
 
 const locationSchema = new Schema({
   alamat: {
@@ -37,6 +37,17 @@ const imagesSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
+const staffSchema = new mongoose.Schema({
+  staffId: {
+    type: Types.ObjectId,
+    required: true,
+    ref: 'User'
+  },
+  isActive: {
+    type: Boolean,
+    required: true
+  }
+})
 
 const outletSchema = new Schema({
   name: {
@@ -55,6 +66,10 @@ const outletSchema = new Schema({
   openingHours: {
     type: openingHoursSchema,
     required: true
+  },
+  staff : {
+    type: [staffSchema],
+    default: []
   },
   isActive : {
     type: Boolean,
