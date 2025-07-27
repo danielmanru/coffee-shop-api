@@ -12,3 +12,5 @@ web.listen(PORT, ()=>{
   connectDb();
   logger.info(`App Start at Port ${PORT}`);
 })
+
+export default web;
