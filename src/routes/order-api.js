@@ -4,7 +4,8 @@ import orderController from "../controllers/order-controller.js";
 
 const orderRouter = new express.Router();
 
-orderRouter.get("/", authMiddleware(['customer']), orderController.getUserOrders);
+orderRouter.get("/user/orders", authMiddleware(['customer']), orderController.getUserOrders);
+orderRouter.get("/", authMiddleware(['admin']), orderController.getAllOrders);
 orderRouter.get("/order/:orderId", authMiddleware(['customer', 'admin']), orderController.getOrderById);
 orderRouter.get("/user/:userId", authMiddleware(['admin']), orderController.getOrdersByUserId);
 orderRouter.get("/outlet/:outletId", authMiddleware(['admin']), orderController.getOrdersByOutletId);

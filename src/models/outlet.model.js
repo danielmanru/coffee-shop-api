@@ -47,7 +47,7 @@ const staffSchema = new mongoose.Schema({
     type: Boolean,
     required: true
   }
-})
+}, {_id:false});
 
 const outletSchema = new Schema({
   name: {
