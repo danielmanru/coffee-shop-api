@@ -21,7 +21,14 @@ import Outlet from "../models/outlet.model.js";
 const { ACCESS_TOKEN_SECRET, VERIFY_TOKEN_SECRET, REFRESH_TOKEN_SECRET, API_URI } = process.env;
 
 const register = async(request) => {
-  const user = validate(registerUserValidation, request);
+  const user = validate(registerUserValidation, request.body);
+  let outlet;
+  if(user.role === 'staff') {
+    if (!request.query.outletId) {
+      throw new ResponseError(400, "outletId is required")
+    }
+    outlet = await Outlet.findById(request.query.outletId);
+  }
   const countUser =  await User.countDocuments({ email: user.email });
 
   if(countUser === 1){
@@ -32,10 +39,10 @@ const register = async(request) => {
 
   await sendVerificationEmail(user.email)
 
+
   const userCreated = await User.create(user);
   await cartService.initializeNewCart(userCreated._id)
   if(user.role === 'staff') {
-    const outlet = await Outlet.findById(request.query.outletId);
     outlet.staff.push({
       staffId: userCreated._id,
       isActive: true
