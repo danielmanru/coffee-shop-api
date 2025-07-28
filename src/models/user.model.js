@@ -3,15 +3,19 @@ import mongoose from "mongoose";
 const locationSchema = new mongoose.Schema({
   alamat: {
     type: String,
+    required: true
   },
   kecamatan: {
     type: String,
+    required: true
   },
   kelurahan: {
     type: String,
+    required: true
   },
   kota: {
     type: String,
+    required: true
   }
 }, { _id: false });
 
@@ -48,7 +52,7 @@ const userSchema = new mongoose.Schema({
   },
   refreshToken: {
     type: String,
-    default : ""
+    default : null
   }
 }, { timestamps : true } );
 

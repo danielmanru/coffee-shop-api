@@ -1,0 +1,1808 @@
+openapi: 3.1.0
+info:
+  title: My Project
+  description: ''
+  version: 1.0.0
+tags:
+  - name: User
+  - name: Menu
+  - name: Image
+  - name: Outlet
+  - name: Cart
+  - name: Order
+  - name: Payment
+paths:
+  /api/v1/register:
+    post:
+      summary: User Register
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters:
+        - name: outletId
+          in: query
+          description: ''
+          required: false
+          example: 686bbade9ad15a09ecaae0e2
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                phone:
+                  type: string
+                role:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+                - phone
+                - role
+            example:
+              name: test user
+              email: yiserot148@7tul.com
+              password: K5gb#mpg
+              phone: '081299998888'
+              role: staff
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: User registered successfully
+                data:
+                  _id: 688782e4db2c2ccddeb140d7
+                  name: test user
+                  email: yiserot148@7tul.com
+          headers: {}
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: outletId is required
+          headers: {}
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Email already registered
+          headers: {}
+      security: []
+  /api/v1/login:
+    post:
+      summary: User Login
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+            example:
+              email: jamode8654@dosonex.com
+              password: K5gb#mpg
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties: {}
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Login successfully
+                data:
+                  _id: 6881f27e816b998b6a75db47
+                  refreshToken: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODgxZjI3ZTgxNmI5OThiNmE3NWRiNDciLCJlbWFpbCI6ImphbW9kZTg2NTRAZG9zb25leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NTM3MTg1ODcsImV4cCI6MTc1NDMyMzM4N30.WUHx-M417TeJJFluA31tniRyTqg30Hmz33j5Jvmm0v8
+                  accessToken: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODgxZjI3ZTgxNmI5OThiNmE3NWRiNDciLCJlbWFpbCI6ImphbW9kZTg2NTRAZG9zb25leC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NTM3MTg1ODcsImV4cCI6MTc1MzgwNDk4N30.ylVDmZ1JAqBLoj3z2JHg5IVUcC8sWr04cvmEgKzNDuI
+          headers: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Email or password is wrong
+          headers: {}
+      security: []
+  /api/v1/users/user:
+    get:
+      summary: get user data
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/users/sendVerificationEmail:
+    get:
+      summary: send verification email
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/users/refreshToken:
+    get:
+      summary: get new access token
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/users/verifyUser:
+    get:
+      summary: verify user
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters:
+        - name: token
+          in: query
+          description: ''
+          required: true
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbnVydW5nZDAyNUBnbWFpbC5jb20iLCJpYXQiOjE3NTEyOTM4MTcsImV4cCI6MTc1MTI5NzQxN30.xE_SroEpTFTocuf7eqwtQDn2xYwbH9L2fUa8e5ALghQ
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/users/changePassword:
+    put:
+      summary: change password
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+            example:
+              currentPassword: M5gb#mpg
+              newPassword: K5gb#mpg
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/users/forgetPassword:
+    post:
+      summary: forget password
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+            example:
+              email: manurungd025@gmail.com
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/users/updateUserDetail:
+    put:
+      summary: update user detail
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                phone:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                    kecamatan:
+                      type: string
+                    kelurahan:
+                      type: string
+                    kota:
+                      type: string
+                  required:
+                    - alamat
+                    - kecamatan
+                    - kelurahan
+                    - kota
+              required:
+                - name
+                - phone
+                - location
+            example:
+              name: Daniel Manurung
+              phone: '081299998888'
+              location:
+                alamat: JL Tester No. 1
+                kecamatan: tester barat
+                kelurahan: tester kota
+                kota: tester
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/users/resetPassword:
+    put:
+      summary: reset password
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters:
+        - name: token
+          in: query
+          description: ''
+          required: true
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbnVydW5nZDAyNUBnbWFpbC5jb20iLCJpYXQiOjE3NTEyOTUxNDMsImV4cCI6MTc1MTI5NTc0M30.L7rogAgzRcLxPytysT7p9qeKXVhzcXnXB-huDpY75oA
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                confirmNewPassword:
+                  type: string
+              required:
+                - newPassword
+                - confirmNewPassword
+            example:
+              newPassword: M5gb#mpg
+              confirmNewPassword: M5gb#mpg
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/menus/addMenu:
+    post:
+      summary: add menu
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                isAvailable:
+                  type: boolean
+                variants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      size:
+                        type: string
+                      price:
+                        type: integer
+                    required:
+                      - size
+                      - price
+              required:
+                - name
+                - description
+                - category
+                - isAvailable
+                - variants
+            example:
+              name: Sanger
+              description: Kopi sanger nyaman diminum
+              category: coffee
+              isAvailable: true
+              variants:
+                - size: small
+                  price: 12000
+                - size: regular
+                  price: 15000
+                - size: large
+                  price: 18000
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/menus/:
+    get:
+      summary: Get all menus
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters: []
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+            example:
+              name: Kopi Susu Gula Aren
+              description: Kopi nikmat nyaman diminum
+              category: coffee
+              isAvailable: true
+              variants:
+                - size: small
+                  price: 12000
+                - size: medium
+                  price: 15000
+                - size: large
+                  price: 18000
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/menus/getMenuByCategory/{menuCategory}:
+    get:
+      summary: Get menu by category
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters:
+        - name: menuCategory
+          in: path
+          description: ''
+          required: true
+          example: coffee
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/menus/getMenuById/{menuId}:
+    get:
+      summary: Get menu by id
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters:
+        - name: menuId
+          in: path
+          description: ''
+          required: true
+          example: 6862b3d15b841c86d2274275
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/menus/updateMenu:
+    put:
+      summary: Update menu
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters:
+        - name: menuId
+          in: query
+          description: ''
+          required: true
+          example: 6862b3d15b841c86d2274275
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                isAvailable:
+                  type: boolean
+                variants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      size:
+                        type: string
+                      price:
+                        type: integer
+                    required:
+                      - size
+                      - price
+              required:
+                - name
+                - description
+                - category
+                - isAvailable
+                - variants
+            example:
+              name: Kopi Susu Gula Aren
+              description: Kopi nikmat nyaman diminum
+              category: coffee
+              isAvailable: true
+              variants:
+                - size: small
+                  price: 10000
+                - size: regular
+                  price: 15000
+                - size: large
+                  price: 18000
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/menus/deleteMenu:
+    delete:
+      summary: Delete Menu
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters:
+        - name: menuId
+          in: query
+          description: ''
+          required: true
+          example: 686a79893d2dcfa15538590b
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/menus/getAvailableMenu:
+    get:
+      summary: Get Available Menu
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/images/addImage/for/Menu:
+    post:
+      summary: add image
+      deprecated: false
+      description: ''
+      tags:
+        - Image
+      parameters:
+        - name: itemId
+          in: query
+          description: ''
+          required: true
+          example: 6862b3d15b841c86d2274275
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  example: []
+                  type: string
+                  format: binary
+              required:
+                - images
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/images/deleteImage/for/Menu:
+    put:
+      summary: Delete Image
+      deprecated: false
+      description: ''
+      tags:
+        - Image
+      parameters:
+        - name: itemId
+          in: query
+          description: ''
+          required: true
+          example: 6862b3d15b841c86d2274275
+          schema:
+            type: string
+        - name: publicIds
+          in: query
+          description: ''
+          required: true
+          example: >-
+            coffee_shop_assetsundefined/kopi-susu-gula-aren1.jpeg,coffee_shop_assetsundefined/kopi-susu-gula-aren2.jpg
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/outlets/addOutlet:
+    post:
+      summary: Add New Outlet
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                    kecamatan:
+                      type: string
+                    kelurahan:
+                      type: string
+                  required:
+                    - alamat
+                    - kecamatan
+                    - kelurahan
+                openingHours:
+                  type: object
+                  properties:
+                    open:
+                      type: string
+                    close:
+                      type: string
+                  required:
+                    - open
+                    - close
+                isActive:
+                  type: boolean
+              required:
+                - name
+                - location
+                - openingHours
+                - isActive
+            example:
+              name: Gatot Subroto Medan
+              location:
+                alamat: Jl. Gatot Subroto No. 114
+                kecamatan: Medan Maimun
+                kelurahan: Maimun
+              openingHours:
+                open: '08:00'
+                close: '22:00'
+              isActive: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/outlets/:
+    get:
+      summary: Get All Outlets
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/outlets/searchOutlet:
+    get:
+      summary: Search Outlet
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters:
+        - name: search
+          in: query
+          description: ''
+          required: true
+          example: gatot
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/outlets/updateOutlet:
+    put:
+      summary: Update Outlet
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters:
+        - name: outletId
+          in: query
+          description: ''
+          required: true
+          example: 686bbade9ad15a09ecaae0e2
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                    kecamatan:
+                      type: string
+                    kelurahan:
+                      type: string
+                  required:
+                    - alamat
+                    - kecamatan
+                    - kelurahan
+                openingHours:
+                  type: object
+                  properties:
+                    open:
+                      type: string
+                    close:
+                      type: string
+                  required:
+                    - open
+                    - close
+                isActive:
+                  type: boolean
+              required:
+                - name
+                - location
+                - openingHours
+                - isActive
+            example:
+              name: Gatot Subroto 1 Medan
+              location:
+                alamat: Jl. Gatot Subroto No. 125
+                kecamatan: Medan Maimun
+                kelurahan: Maimun
+              openingHours:
+                open: '08:00'
+                close: '22:00'
+              isActive: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/outlets/getOutletById/{outletId}:
+    get:
+      summary: Get Outlet By Id
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters:
+        - name: outletId
+          in: path
+          description: ''
+          required: true
+          example: 686bbade9ad15a09ecaae0e2
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/outlets/deleteOutlet:
+    delete:
+      summary: Delete Outlet
+      deprecated: false
+      description: ''
+      tags:
+        - Outlet
+      parameters:
+        - name: outletId
+          in: query
+          description: ''
+          required: true
+          example: 686bbade9ad15a09ecaae0e2
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/cart/:
+    get:
+      summary: Get User Cart
+      deprecated: false
+      description: ''
+      tags:
+        - Cart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/cart/add:
+    post:
+      summary: Add New Item To Cart
+      deprecated: false
+      description: ''
+      tags:
+        - Cart
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                menuId:
+                  type: string
+                temperature:
+                  type: string
+                iceLevel:
+                  type: string
+                variant:
+                  type: string
+              required:
+                - menuId
+                - temperature
+                - iceLevel
+                - variant
+            example:
+              menuId: 686b963623194360ced8d009
+              temperature: hot
+              iceLevel: no_ice
+              variant: regular
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/cart/increase/item/6881ff5b976c95bf77d258ce:
+    patch:
+      summary: Increase Quantity
+      deprecated: false
+      description: ''
+      tags:
+        - Cart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/cart/decrease/item/6881ff5b976c95bf77d258ce:
+    patch:
+      summary: Decrease Quantity
+      deprecated: false
+      description: ''
+      tags:
+        - Cart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/cart/delete/item/6881ff5b976c95bf77d258ce:
+    delete:
+      summary: Delete Cart Item
+      deprecated: false
+      description: ''
+      tags:
+        - Cart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/add:
+    post:
+      summary: Create Order
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outletId:
+                  type: string
+                orderType:
+                  type: string
+                deliveryFee:
+                  type: integer
+              required:
+                - outletId
+                - orderType
+                - deliveryFee
+            example:
+              outletId: 686bbade9ad15a09ecaae0e2
+              orderType: delivery
+              deliveryFee: 12000
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/user/orders:
+    get:
+      summary: Get User Orders
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters: []
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+            example:
+              menuId: 686b963623194360ced8d009
+              temperature: hot
+              iceLevel: no_ice
+              variant: regular
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/order/{orderId}:
+    get:
+      summary: Get Order By Id
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters:
+        - name: orderId
+          in: path
+          description: ''
+          required: true
+          example: 68826d99e247999031f21109
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/:
+    get:
+      summary: Get All Orders
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/update/status:
+    patch:
+      summary: Update Order Status
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters:
+        - name: orderId
+          in: query
+          description: ''
+          required: true
+          example: 68826d99e247999031f21109
+          schema:
+            type: string
+        - name: orderStatus
+          in: query
+          description: ''
+          required: true
+          example: completed
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
+  /api/v1/orders/user/{userId}:
+    get:
+      summary: Get Orders By User Id
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters:
+        - name: userId
+          in: path
+          description: ''
+          required: true
+          example: 6881f27e816b998b6a75db47
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/orders/outlet/{outletId}:
+    get:
+      summary: Get Orders By Outlet Id
+      deprecated: false
+      description: ''
+      tags:
+        - Order
+      parameters:
+        - name: outletId
+          in: path
+          description: ''
+          required: true
+          example: 686bbade9ad15a09ecaae0e2
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/payment/add:
+    post:
+      summary: Add Payment
+      deprecated: false
+      description: ''
+      tags:
+        - Payment
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: string
+                amount:
+                  type: integer
+                paymentMethod:
+                  type: string
+              required:
+                - orderId
+                - amount
+                - paymentMethod
+            example:
+              orderId: 68848cc06bc4d8143ffd4f7d
+              amount: 57000
+              paymentMethod: qris
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/payment/update/status:
+    patch:
+      summary: Update Payment Status
+      deprecated: false
+      description: ''
+      tags:
+        - Payment
+      parameters:
+        - name: orderId
+          in: query
+          description: ''
+          required: true
+          example: 68848cc06bc4d8143ffd4f7d
+          schema:
+            type: string
+        - name: paymentStatus
+          in: query
+          description: ''
+          required: true
+          example: paid
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  type: string
+                amount:
+                  type: integer
+                paidAt:
+                  type: string
+              required:
+                - transactionId
+                - amount
+                - paidAt
+            example:
+              transactionId: txn68848cc06bc4d8143ffd4f7d
+              amount: 57000
+              paidAt: '2025-07-26T08:38:00.143Z'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/payments/:
+    get:
+      summary: Get All Payment
+      deprecated: false
+      description: ''
+      tags:
+        - Payment
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+  /api/v1/payments/order/{orderId}:
+    get:
+      summary: Get Payment By Order Id
+      deprecated: false
+      description: ''
+      tags:
+        - Payment
+      parameters:
+        - name: orderId
+          in: path
+          description: ''
+          required: true
+          example: 68848cc06bc4d8143ffd4f7d
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - bearer: []
+webhooks: {}
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        location:
+          type:
+            - object
+            - 'null'
+          properties:
+            alamat:
+              type: string
+            kecamatan:
+              type: string
+            kelurahan:
+              type: string
+            kota:
+              type: string
+          required:
+            - alamat
+            - kecamatan
+            - kelurahan
+            - kota
+        role:
+          type: string
+          enum:
+            - customer
+            - staff
+            - admin
+          description: 'Enum: [''admin'', ''staff'', ''customer'']'
+        isVerified:
+          type: boolean
+        refreshToken:
+          type:
+            - string
+            - 'null'
+      required:
+        - name
+        - email
+        - password
+        - phone
+        - role
+    Cart:
+      type: object
+      properties:
+        userId:
+          type: string
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            menuId:
+              type: string
+            iceLevel:
+              type: string
+              description: 'Enum : [''no_ice'',  ''less_ice'',  ''regular_ice'']'
+              enum:
+                - no_ice
+                - less_ice
+                - regular_ice
+            variant:
+              type: string
+              description: 'Enum : [''small,  ''regular'',  ''large'']'
+              enum:
+                - small
+                - regular
+                - large
+            price:
+              type: integer
+            quantity:
+              type: integer
+          required:
+            - _id
+            - menuId
+            - iceLevel
+            - variant
+            - price
+            - quantity
+        totalPrice:
+          type: integer
+          description: 'Default : 0'
+      required:
+        - userId
+    Menu:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        isAvailable:
+          type: string
+        images:
+          type: object
+          properties:
+            url:
+              type: string
+            publicId:
+              type: string
+          required:
+            - url
+            - publicId
+          description: 'Default : []'
+        variants:
+          type: object
+          properties:
+            size:
+              type: string
+            price:
+              type: integer
+          required:
+            - size
+            - price
+      required:
+        - name
+        - category
+        - isAvailable
+        - _id
+        - variants
+        - description
+    Order:
+      type: object
+      properties:
+        userId:
+          type: string
+        outletId:
+          type: string
+        items:
+          type: object
+          properties:
+            menuId:
+              type: string
+            temperature:
+              type: string
+              description: 'Enum : [''hot'', ''cold'']'
+              enum:
+                - hot
+                - cold
+            iceLevel:
+              type: string
+              description: 'Enum : [''no_ice'',  ''less_ice'',  ''regular_ice'']'
+              enum:
+                - no_ice
+                - less_ice
+                - regular_ice
+            variant:
+              type: string
+              description: 'Enum : [''small,  ''regular'',  ''large'']'
+              enum:
+                - small
+                - regular
+                - large
+            price:
+              type: integer
+            quantity:
+              type: integer
+          required:
+            - menuId
+            - iceLevel
+            - temperature
+            - quantity
+            - price
+            - variant
+        orderType:
+          type: string
+          description: 'Enum : [''delivery'', ''pick_up'', ''dine_in'']'
+          enum:
+            - delivery
+            - pick_up
+            - dine_in
+        deliveryFee:
+          type: integer
+        totalPrice:
+          type: integer
+        status:
+          type: string
+          description: >-
+            Enum : ['pending', 'in_progress', 'on_delivery', 'cancelled',
+            'completed']
+          enum:
+            - pending
+            - in_progress
+            - on_delivery
+            - cancelled
+            - completed
+      required:
+        - userId
+        - outletId
+        - items
+        - orderType
+        - deliveryFee
+        - totalPrice
+        - status
+    Outlet:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: object
+          properties:
+            alamat:
+              type: string
+            kecamatan:
+              type: string
+            kelurahan:
+              type: string
+          required:
+            - alamat
+            - kecamatan
+            - kelurahan
+        images:
+          type: object
+          properties: {}
+        openingHours:
+          type: object
+          properties:
+            open:
+              type: string
+              description: 'Format : hh.ss'
+            close:
+              type: string
+              description: 'Format : hh.ss'
+          required:
+            - open
+            - close
+        staff:
+          type: object
+          properties:
+            staffId:
+              type: string
+            isActive:
+              type: boolean
+          required:
+            - staffId
+            - isActive
+        isActive:
+          type: boolean
+      required:
+        - name
+        - isActive
+        - openingHours
+        - images
+        - location
+    Payment:
+      type: object
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        orderId:
+          type: string
+        amount:
+          type: integer
+        paymentMethod:
+          type: string
+          enum:
+            - gopay
+            - cash
+            - dana
+            - qris
+          description: 'Enum: [''gopay'', ''cash'', ''dana'', ''qris'']'
+        paymentReceipt:
+          type:
+            - object
+            - 'null'
+          properties:
+            transactionId:
+              type: string
+            amount:
+              type: number
+            paidAt:
+              type: string
+              format: date-time
+          required:
+            - transactionId
+            - amount
+            - paidAt
+        status:
+          type: string
+          enum:
+            - unpaid
+            - paid
+            - expired
+            - cancelled
+          description: 'Enum: [''unpaid'', ''paid'', ''expired'', ''cancelled'']'
+        paymentUrl:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+      required:
+        - _id
+        - userId
+        - orderId
+        - amount
+        - paymentMethod
+        - paymentReceipt
+        - status
+        - paymentUrl
+        - expiresAt
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+servers:
+  - url: http://localhost:3000
+    description: Testing Env
+  - url: https://coffee-shop-api-blue.vercel.app
+    description: Prod Env
+security: []

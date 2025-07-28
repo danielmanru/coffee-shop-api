@@ -28,7 +28,7 @@ const menuSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    default: '',
+    required: true,
   },
   category: {
     type: String,
@@ -45,7 +45,7 @@ const menuSchema = new mongoose.Schema({
   },
   variants: {
     type: [variantSchema],
-    default: [],
+    required: true,
   }
 }, { timestamps: true });
 

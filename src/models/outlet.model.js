@@ -31,9 +31,11 @@ const openingHoursSchema = new Schema({
 const imagesSchema = new mongoose.Schema({
   url: {
     type: String,
+    required: true
   },
   publicId: {
-    type: String
+    type: String,
+    required: true
   }
 }, { _id: false });
 
