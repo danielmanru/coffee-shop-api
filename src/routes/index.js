@@ -8,15 +8,16 @@ import cartRouter from "./cart-api.js";
 import orderRouter from "./order-api.js";
 import paymentRouter from "./payment-api.js";
 import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+// import YAML from 'yamljs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const swaggerPath = path.join(__dirname, '../../docs/api-docs.yaml');
-const swaggerDocument = YAML.load(swaggerPath)
+// const swaggerPath = path.join(__dirname, '../../docs/api-docs.yaml');
+const swaggerDocument = path.join(__dirname, '../../docs/api-docs.json');
+// const swaggerDocument = YAML.load(swaggerPath)
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
