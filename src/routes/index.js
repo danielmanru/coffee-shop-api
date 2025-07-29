@@ -17,7 +17,6 @@ const __dirname = path.dirname(__filename);
 
 const swaggerPath = path.join(__dirname, '../../docs/api-docs.yaml');
 const swaggerDocument = YAML.load(swaggerPath)
-const swaggerCssUrl = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.27.0/swagger-ui.min.css"
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
@@ -30,7 +29,12 @@ router.get('/', (req, res, next) => {
     next(error)
   }
 });
-router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {customCssUrl: swaggerCssUrl}));
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customJs: ["https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.27.0/swagger-ui-bundle.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.27.0/swagger-ui-standalone-preset.min.js"],
+  customCssUrl: ["https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.27.0/swagger-ui.min.css"
+]
+}));
 router.use('/', publicRouter)
 router.use('/users', userRouter);
 router.use('/menus', menuRouter);
