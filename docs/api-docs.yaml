@@ -82,7 +82,7 @@ paths:
                   email: yiserot148@7tul.com
           headers: {}
         '400':
-          description: ''
+          description: Outlet Id is required for staff registration
           content:
             application/json:
               schema:
@@ -106,7 +106,7 @@ paths:
                   message: outletId is required
           headers: {}
         '409':
-          description: ''
+          description: Email already registered
           content:
             application/json:
               schema:
@@ -223,11 +223,32 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Successfully get user data
+                data:
+                  _id: 6881f27e816b998b6a75db47
+                  name: Jamdoe
+                  email: jamode8654@dosonex.com
+                  phone: '081299998888'
+                  location: null
+                  role: admin
+                  isVerified: true
           headers: {}
       security:
         - bearer: []
-  /api/users/sendVerificationEmail:
+  /api/v1/users/sendVerificationEmail:
     get:
       summary: send verification email
       deprecated: false
@@ -242,11 +263,21 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                required:
+                  - status
+                  - message
+              example:
+                status: PENDING
+                message: An verification email is being sent to your email!
           headers: {}
       security:
         - bearer: []
-  /api/users/refreshToken:
+  /api/v1/users/refreshToken:
     get:
       summary: get new access token
       deprecated: false
@@ -261,11 +292,26 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  accessToken:
+                    type: string
+                required:
+                  - success
+                  - message
+                  - accessToken
+              example:
+                success: true
+                message: New access token generated successfully
+                accessToken: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inlpc2Vyb3QxNDhAN3R1bC5jb20iLCJyb2xlIjoic3RhZmYiLCJpYXQiOjE3NTM3Nzg0NTYsImV4cCI6MTc1Mzg2NDg1Nn0.A35u-8GCghi2l5eRO99WLW02xD-tgl9PIUds5rFu9qs
           headers: {}
       security:
         - bearer: []
-  /api/users/verifyUser:
+  /api/v1/users/verifyUser:
     get:
       summary: verify user
       deprecated: false
@@ -278,7 +324,7 @@ paths:
           description: ''
           required: true
           example: >-
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbnVydW5nZDAyNUBnbWFpbC5jb20iLCJpYXQiOjE3NTEyOTM4MTcsImV4cCI6MTc1MTI5NzQxN30.xE_SroEpTFTocuf7eqwtQDn2xYwbH9L2fUa8e5ALghQ
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inlpc2Vyb3QxNDhAN3R1bC5jb20iLCJpYXQiOjE3NTM3NzgxMzUsImV4cCI6MTc1Mzg2NDUzNX0.W_QqDI7Y1mD1RAzThXIheJOUY_GHw50NocnVz2xapRc
           schema:
             type: string
       responses:
@@ -288,10 +334,48 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: User verified successfully
+                data: null
+          headers: {}
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Your email has been verified.
           headers: {}
       security: []
-  /api/users/changePassword:
+  /api/v1/users/changePassword:
     put:
       summary: change password
       deprecated: false
@@ -322,11 +406,60 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      refreshToken:
+                        type: string
+                    required:
+                      - _id
+                      - refreshToken
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Successfully change password
+                data:
+                  _id: 688782e4db2c2ccddeb140d7
+                  refreshToken: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inlpc2Vyb3QxNDhAN3R1bC5jb20iLCJyb2xlIjoic3RhZmYiLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NTM3NzkzMzcsImV4cCI6MTc1NDM4NDEzN30.nAhKslkggFpJ8MqPMq7rWZ8uZU-s2TbpowlgxEG_uD8
+          headers: {}
+        '401':
+          description: Showed if current password doesn't match with user password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: password is wrong
           headers: {}
       security:
         - bearer: []
-  /api/users/forgetPassword:
+  /api/v1/forgetPassword:
     post:
       summary: forget password
       deprecated: false
@@ -354,6 +487,24 @@ paths:
               schema:
                 type: object
                 properties: {}
+              example:
+                status: PENDING
+                message: A reset password link is being sent to your email!
+          headers: {}
+        x-200:OK:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                required:
+                  - status
+                  - message
           headers: {}
       security: []
   /api/v1/users/updateUserDetail:
@@ -409,11 +560,36 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Successfully update user data
+                data:
+                  _id: 688782e4db2c2ccddeb140d7
+                  name: Daniel Manurung
+                  email: yiserot148@7tul.com
+                  phone: '081299998888'
+                  location:
+                    alamat: JL Tester No. 1
+                    kecamatan: tester barat
+                    kelurahan: tester kota
+                    kota: tester
+                  role: staff
+                  isVerified: true
           headers: {}
       security:
         - bearer: []
-  /api/users/resetPassword:
+  /api/v1/users/resetPassword:
     put:
       summary: reset password
       deprecated: false
@@ -452,9 +628,80 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Password reset successfully
+                data: null
+          headers: {}
+        '400':
+          description: New password and confirm password is different!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: New password and confirm password is different!
           headers: {}
       security: []
+  /api/v1/users/logout:
+    put:
+      summary: Logout
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: User successfully logged out
+                data: null
+          headers: {}
+      security:
+        - bearer: []
   /api/v1/menus/addMenu:
     post:
       summary: add menu
@@ -1800,9 +2047,5 @@ components:
     bearer:
       type: http
       scheme: bearer
-servers:
-  - url: http://localhost:3000
-    description: Testing Env
-  - url: https://coffee-shop-api-blue.vercel.app
-    description: Prod Env
+servers: []
 security: []

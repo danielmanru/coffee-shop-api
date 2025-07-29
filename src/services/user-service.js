@@ -93,7 +93,7 @@ const updateUserDetail = async (request, userEmail) => {
     {email : userEmail},
     { $set: updateRequest },
     { new :true }
-  ).select('-password -createdAt -updatedAt');
+  ).select('-password -createdAt -updatedAt -refreshToken -__v');
 
   if(!searchUser){
     throw new ResponseError(404, "User is not found");
@@ -112,22 +112,18 @@ const sendVerificationEmail =  async (userEmail) => {
 
 const verifyUser = async (request) => {
   const { email } = request.user;
-  const user = await User.findOneAndUpdate(
-    { email: email },
-    { $set: { isVerified: true } },
-    { new: true }
-  ).select('email isVerified');
-
-
+  const user = await User.findOne({email: email});
   if (!user) {
     throw new ResponseError(404, 'User is not found!');
   }
 
-  if (user.isVerified === "TRUE") {
+  if (user.isVerified === true) {
     throw new ResponseError(400, 'Your email has been verified.');
   }
+  user.isVerified = true;
+  await user.save();
 
-  return user;
+  return null;
 }
 
 const generateAccessToken = (payload, expireTime) => {
@@ -147,7 +143,7 @@ const getUser = async (email) => {
   email = validate((getUserValidation), email);
 
   const user = await User.findOne({ email: email })
-    .select('-password -createdAt -updatedAt');
+    .select('-password -createdAt -updatedAt -__v -refreshToken');
 
   if (!user){
     throw new ResponseError(404, "user is not found");
@@ -193,16 +189,16 @@ const resetPassword = async (request) => {
   };
 
   if(resetPasswordRequest.newPassword !== resetPasswordRequest.confirmNewPassword){
-    throw new ResponseError(401, "New password and confirm password is different!");
+    throw new ResponseError(400, "New password and confirm password is different!");
   };
 
   const newPassword = await bcrypt.hash(resetPasswordRequest.newPassword, 10);
-
-  return User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     user._id,
-    { $set: { password : newPassword } },
-    { new :true }
-  ).select('email');
+    { $set: { password : newPassword } }
+  );
+
+  return null
 };
 
 const changePassword = async (request) => {
