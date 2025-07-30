@@ -3,7 +3,7 @@ import menuService from "../services/menu-service.js";
 const addMenu = async(req, res, next) => {
   try {
     const result = await menuService.addMenu(req.body);
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Success create menu",
       data: result

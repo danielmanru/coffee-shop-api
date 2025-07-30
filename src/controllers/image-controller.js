@@ -3,7 +3,7 @@ import imageService from "../services/image-service.js";
 const addImages = async(req, res, next) => {
   try {
     const result = await imageService.addImages(req.query.itemId, req.files, req.params.modelName);
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Image added successfully",
       data: result
