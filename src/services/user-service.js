@@ -91,7 +91,7 @@ const updateUserDetail = async (request, userEmail) => {
     {email : userEmail},
     { $set: updateRequest },
     { new :true }
-  ).select('-password -createdAt -updatedAt -refreshToken -__v');
+  ).select('-password  -refreshToken');
 
   if(!searchUser){
     throw new ResponseError(404, "User is not found");
@@ -141,7 +141,7 @@ const getUser = async (email) => {
   email = validate((getUserValidation), email);
 
   const user = await User.findOne({ email: email })
-    .select('-password -createdAt -updatedAt -__v -refreshToken');
+    .select('-password');
 
   if (!user){
     throw new ResponseError(404, "user is not found");

@@ -46,7 +46,7 @@ const addImages = async(itemId, files, modelName) => {
       }
     },
     { new: true }
-  ).select("-createdAt -updatedAt -__v");
+  );
 
   if(!updatedImages) {
     throw new ResponseError(404, `${modelName} is not found!`);
@@ -80,7 +80,7 @@ const deleteImages = async(itemId, publicIds, modelName) => {
       }
     },
     { new: true }
-  ).select("-createdAt -updatedAt -__v");
+  );
 
   if(!updatedImages) {
     throw new ResponseError(404, `${modelName} is not found!`);

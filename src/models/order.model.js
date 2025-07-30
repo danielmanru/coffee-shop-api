@@ -77,7 +77,8 @@ const orderSchema = new Schema({
     default: 'pending'
   }
 
-}, {timestamps: true});
+}, {timestamps: true,
+  versionKey: false});
 
 orderSchema.methods.calculateTotalPrice = function () {
   return this.items.reduce((sum, item) => {

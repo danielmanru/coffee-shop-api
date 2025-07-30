@@ -8,12 +8,12 @@ import {ResponseError} from "../error/response-error.js";
 import idValidation from "../validations/id-validation.js";
 
 const getAllOutlet = async (request) => {
-  return Outlet.find( {} ).select("-createdAt -updatedAt -__v");
+  return Outlet.find( {} );
 }
 
 const getOutletById = async (outletId) => {
   const outlet_id = validate(idValidation, outletId);
-  const outlet = await Outlet.findById(outlet_id).select("-createdAt -updatedAt -__v");
+  const outlet = await Outlet.findById(outlet_id);
 
   if(!outlet) {
     throw new ResponseError(404, "Outlet not found");
@@ -28,7 +28,7 @@ const searchOutlet = async (request) => {
   const outlets = await Outlet.find(
     { $text: { $search: req } },
     { score: {$meta: "textScore" } }
-  ).sort( { score: { $meta: "textScore" } }).select("-createdAt -updatedAt -__v");
+  ).sort( { score: { $meta: "textScore" } });
 
   if(!outlets) {
     throw new ResponseError(404, "Outlet not found");
@@ -44,8 +44,8 @@ const addOutlet = async (request) => {
   if(outlet) {
     throw new ResponseError(400, "Outlet already exists");
   }
-  const outletCreated = await Outlet.create(req);
-  return Outlet.findById(outletCreated._id).select("-createdAt -updatedAt -__v");
+
+  return Outlet.create(req);
 }
 
 const updateOutlet = async (request, outletId) => {
@@ -55,7 +55,7 @@ const updateOutlet = async (request, outletId) => {
     outlet_id,
     { $set: req },
     { new: true }
-  ).select("-createdAt -updatedAt -__v");
+  );
 
   if(!updatedOutlet) {
     throw new ResponseError(404, "Outlet not found");
@@ -66,7 +66,7 @@ const updateOutlet = async (request, outletId) => {
 
 const deleteOutlet = async (outletId) => {
   const outlet_id = validate(idValidation, outletId);
-  const outlet = await Outlet.findByIdAndDelete(outlet_id).select("-createdAt -updatedAt -__v");
+  const outlet = await Outlet.findByIdAndDelete(outlet_id);
 
   if(!outlet) {
     throw new ResponseError(404, "Outlet not found");

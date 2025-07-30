@@ -17,7 +17,7 @@ const locationSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { _id: false });
+}, {_id: false});
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -52,9 +52,12 @@ const userSchema = new mongoose.Schema({
   },
   refreshToken: {
     type: String,
-    default : null
+    default: null
   }
-}, { timestamps : true } );
+}, {
+  timestamps: true,
+  versionKey: false
+});
 
 const User = mongoose.model("User", userSchema);
 

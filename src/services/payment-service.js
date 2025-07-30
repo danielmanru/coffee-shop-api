@@ -37,9 +37,8 @@ const addPayment = async (request) => {
     paymentUrl: "https://www.paymentgateway.com/payment/example",
     expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000)
   });
-  const savedPayment = await paymentRequest.save();
 
-  return Payment.findById(savedPayment._id).select("-userId -paymentReceipt -createdAt -updatedAt -__v");
+  return paymentRequest.save();
 }
 
 const updatePaymentStatus = async (request) => {

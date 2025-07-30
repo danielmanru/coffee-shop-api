@@ -8,7 +8,7 @@ const variantSchema = new mongoose.Schema({
   price: {
     type: Number,
   }
-}, { _id: false });
+}, {_id: false});
 
 const imagesSchema = new mongoose.Schema({
   url: {
@@ -17,7 +17,7 @@ const imagesSchema = new mongoose.Schema({
   publicId: {
     type: String
   }
-}, { _id: false });
+}, {_id: false});
 
 const menuSchema = new mongoose.Schema({
   name: {
@@ -47,7 +47,10 @@ const menuSchema = new mongoose.Schema({
     type: [variantSchema],
     required: true,
   }
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  versionKey: false
+});
 
 const Menu = mongoose.model("Menu", menuSchema);
 
