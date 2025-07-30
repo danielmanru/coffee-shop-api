@@ -42,7 +42,7 @@ const getOutletById = async (req, res, next) => {
 const addOutlet = async (req, res, next) => {
   try {
     const result = await outletService.addOutlet(req.body);
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "Success add new outlet",
       data: result
