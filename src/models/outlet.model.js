@@ -77,7 +77,8 @@ const outletSchema = new Schema({
     type: Boolean,
     default: true
   }
-}, { timestamps: true });
+}, { timestamps: true,
+  versionKey: false });
 
 outletSchema.index({
   name : "text",

@@ -17,7 +17,7 @@ const paymentReceiptSchema = new Schema({
       message: props => `The amount must be greater than 0`,
     }
   },
-  paidAt:{
+  paidAt: {
     type: Date,
     required: true,
   }
@@ -63,11 +63,14 @@ const paymentSchema = new Schema({
     type: String,
     required: true,
   },
-  expiresAt:{
+  expiresAt: {
     type: Date,
     required: true,
   }
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  versionKey: false
+});
 
 const Payment = model('Payment', paymentSchema);
 

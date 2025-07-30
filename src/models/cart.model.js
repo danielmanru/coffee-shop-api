@@ -54,7 +54,10 @@ const cartSchema = new Schema({
     type: Number,
     default: 0
   }
-}, {timestamps: true});
+}, {
+  timestamps: true,
+  versionKey: false
+});
 
 cartSchema.methods.calculateTotalPrice = function () {
   return this.items.reduce((sum, item) => {

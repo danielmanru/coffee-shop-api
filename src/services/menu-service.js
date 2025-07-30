@@ -9,12 +9,12 @@ import {ResponseError} from "../error/response-error.js";
 import idValidation from "../validations/id-validation.js";
 
 const getAllMenus = async() => {
-   return Menu.find( {} ).select("-createdAt -updatedAt -__v");
+   return Menu.find( {} );
 }
 
 const getMenuByCategory = async(request) => {
   const req = validate(getMenuByCategoryValidation, request);
-  const menus = await Menu.find( { category : req } ).select("-createdAt -updatedAt -__v");
+  const menus = await Menu.find( { category : req } );
   if (!menus) {
     throw new ResponseError(404, `Menus with category ${req} are not found!`);
   }
@@ -22,7 +22,7 @@ const getMenuByCategory = async(request) => {
 }
 
 const getAvailableMenu = async() => {
-  const menus = await Menu.find( { isAvailable: true } ).select("-createdAt -updatedAt -__v");
+  const menus = await Menu.find( { isAvailable: true } );
   if(!menus){
     throw new ResponseError(404, `All menus are unavailable!`);
   }
@@ -31,7 +31,7 @@ const getAvailableMenu = async() => {
 
 const getMenuById = async (menuId) => {
   const menu_id = validate(idValidation, menuId);
-  const menu = await Menu.findById(menu_id).select("-createdAt -updatedAt -__v");
+  const menu = await Menu.findById(menu_id);
   if (!menu) {
     throw new ResponseError(404, 'Menu is not found!');
   }
@@ -56,7 +56,7 @@ const updateMenu = async(request, menuId) => {
     menu_id,
     { $set: req },
     { new: true }
-  ).select("-createdAt -updatedAt -__v");
+  );
 
   if (!menu) {
     throw new ResponseError(404, 'Menu is not found!');

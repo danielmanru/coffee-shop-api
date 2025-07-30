@@ -40,7 +40,6 @@ const addItemToCart = async (request) => {
   }
 
   userCart.totalPrice = userCart.calculateTotalPrice();
-
   return userCart.save();
 }
 
@@ -54,7 +53,6 @@ const increaseQuantity = async (user_id, cartItemId) => {
 
   menu.quantity += 1;
   userCart.totalPrice = userCart.calculateTotalPrice();
-
   return userCart.save();
 }
 
@@ -87,7 +85,7 @@ const deleteCartItem = async (user_id, cartItemId) => {
   userCart.items.pull({ _id: cartItemId });
   userCart.totalPrice = userCart.calculateTotalPrice();
 
-  return userCart.save();
+  return userCart.save()
 }
 
 export default {

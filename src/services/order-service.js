@@ -71,6 +71,8 @@ const updateOrderStatus = async (order_id, order_status) => {
       new: true
     }
   )
+
+  return null
 }
 
 export default {
