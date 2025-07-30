@@ -3,6 +3,8 @@ import { google } from "googleapis";
 import ejs from "ejs";
 import { fileURLToPath } from 'url';
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const {
   GOOGLE_CLIENT_ID,

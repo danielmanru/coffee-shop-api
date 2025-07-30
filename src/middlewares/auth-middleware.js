@@ -3,6 +3,8 @@ import { tokenValidation } from '../validations/user-validation.js';
 import {validate} from "../validations/validation.js"
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, VERIFY_TOKEN_SECRET } =  process.env;
 import userRouter from "../routes/user-api.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const authMiddleware = (roles = []) => {
   if (typeof roles === 'string') {

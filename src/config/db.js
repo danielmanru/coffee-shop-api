@@ -1,5 +1,7 @@
 import {logger} from "./logger.js";
 import mongoose from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const MONGODB_URI = (process.env.NODE_ENV === 'development') ? process.env.MONGODB_URI_DEV : process.env.MONGODB_URI_PROD
 
