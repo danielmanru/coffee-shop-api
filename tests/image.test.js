@@ -1,7 +1,6 @@
 import supertest from "supertest";
 import { web } from "../src/config/web.js"
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import {
   createTestMenu,
   createTestUser, removeTestMenu,
@@ -10,6 +9,7 @@ import {
 } from "./test-util.js";
 import {fileURLToPath} from "url";
 import path from "path";
+import dotenv from 'dotenv';
 dotenv.config();
 
 const endpoint = '/api/v1/images'

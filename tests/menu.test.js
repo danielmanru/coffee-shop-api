@@ -1,9 +1,7 @@
 import supertest from "supertest";
 import { web } from "../src/config/web.js"
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import {createTestMenu, createTestUser, removeTestMenu, removeTestUser, verifyUser} from "./test-util.js";
-dotenv.config();
 
 const path = '/api/v1/menus'
 beforeAll(async () => {

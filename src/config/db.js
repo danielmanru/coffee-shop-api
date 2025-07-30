@@ -1,11 +1,13 @@
 import {logger} from "./logger.js";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
+
+const MONGODB_URI = (process.env.NODE_ENV === 'development') ? process.env.MONGODB_URI_DEV : process.env.MONGODB_URI_PROD
 
 const connectDb = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(MONGODB_URI);
   } catch (error) {
     logger.error(error);
     process.exit(1);
@@ -18,7 +20,8 @@ const dbConnListener = () =>{
   });
 
   mongoose.connection.on('connected', () => {
-    logger.info("Mongo DB connected");
+    const dbName = mongoose.connection.name
+    logger.info(`Connected to DB : ${dbName}`);
   });
 }
 

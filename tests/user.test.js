@@ -2,8 +2,8 @@ import supertest from "supertest";
 import { web } from "../src/config/web.js"
 import * as emailUtil from "../src/utils/mailer.js";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import {createTestUser, removeTestUser} from "./test-util.js";
+import dotenv from 'dotenv';
 dotenv.config();
 
 const path = '/api/v1'
