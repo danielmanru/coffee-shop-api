@@ -76,7 +76,7 @@ paths:
                     type: boolean
                   message:
                     type: string
-                  data:
+                  data: &ref_0
                     $ref: '#/components/schemas/User'
                 required:
                   - success
@@ -137,6 +137,95 @@ paths:
                 success: false
                 errors:
                   message: Email already registered
+          headers: {}
+      security: []
+  /api/v1/users/verifyUser:
+    get:
+      summary: verify user
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters:
+        - name: token
+          in: query
+          description: ''
+          required: true
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inlpc2Vyb3QxNDhAN3R1bC5jb20iLCJpYXQiOjE3NTM3NzgxMzUsImV4cCI6MTc1Mzg2NDUzNX0.W_QqDI7Y1mD1RAzThXIheJOUY_GHw50NocnVz2xapRc
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: User verified successfully
+                data: null
+          headers: {}
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Your email has been verified.
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
           headers: {}
       security: []
   /api/v1/login:
@@ -237,8 +326,7 @@ paths:
                     type: boolean
                   message:
                     type: string
-                  data:
-                    $ref: '#/components/schemas/User'
+                  data: *ref_0
                 required:
                   - success
                   - message
@@ -254,6 +342,31 @@ paths:
                   location: null
                   role: admin
                   isVerified: true
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
           headers: {}
       security:
         - bearer: []
@@ -320,70 +433,6 @@ paths:
           headers: {}
       security:
         - bearer: []
-  /api/v1/users/verifyUser:
-    get:
-      summary: verify user
-      deprecated: false
-      description: ''
-      tags:
-        - User
-      parameters:
-        - name: token
-          in: query
-          description: ''
-          required: true
-          example: >-
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inlpc2Vyb3QxNDhAN3R1bC5jb20iLCJpYXQiOjE3NTM3NzgxMzUsImV4cCI6MTc1Mzg2NDUzNX0.W_QqDI7Y1mD1RAzThXIheJOUY_GHw50NocnVz2xapRc
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: 'null'
-                required:
-                  - success
-                  - message
-                  - data
-              example:
-                success: true
-                message: User verified successfully
-                data: null
-          headers: {}
-        '400':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  errors:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                      - message
-                required:
-                  - success
-                  - errors
-              example:
-                success: false
-                errors:
-                  message: Your email has been verified.
-          headers: {}
-      security: []
   /api/v1/users/changePassword:
     put:
       summary: change password
@@ -466,6 +515,31 @@ paths:
                 errors:
                   message: password is wrong
           headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
+          headers: {}
       security:
         - bearer: []
   /api/v1/forgetPassword:
@@ -495,17 +569,6 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
-              example:
-                status: PENDING
-                message: A reset password link is being sent to your email!
-          headers: {}
-        x-200:OK:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
                 properties:
                   status:
                     type: string
@@ -514,90 +577,36 @@ paths:
                 required:
                   - status
                   - message
+              example:
+                status: PENDING
+                message: A reset password link is being sent to your email!
           headers: {}
-      security: []
-  /api/v1/users/updateUserDetail:
-    put:
-      summary: update user detail
-      deprecated: false
-      description: ''
-      tags:
-        - User
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                phone:
-                  type: string
-                location:
-                  type: object
-                  properties:
-                    alamat:
-                      type: string
-                    kecamatan:
-                      type: string
-                    kelurahan:
-                      type: string
-                    kota:
-                      type: string
-                  required:
-                    - alamat
-                    - kecamatan
-                    - kelurahan
-                    - kota
-              required:
-                - name
-                - phone
-                - location
-            example:
-              name: Daniel Manurung
-              phone: '081299998888'
-              location:
-                alamat: JL Tester No. 1
-                kecamatan: tester barat
-                kelurahan: tester kota
-                kota: tester
-      responses:
-        '200':
+        '404':
           description: ''
           content:
             application/json:
               schema:
+                title: ''
                 type: object
                 properties:
                   success:
                     type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/User'
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
                 required:
                   - success
-                  - message
-                  - data
+                  - errors
               example:
-                success: true
-                message: Successfully update user data
-                data:
-                  _id: 688782e4db2c2ccddeb140d7
-                  name: Daniel Manurung
-                  email: yiserot148@7tul.com
-                  phone: '081299998888'
-                  location:
-                    alamat: JL Tester No. 1
-                    kecamatan: tester barat
-                    kelurahan: tester kota
-                    kota: tester
-                  role: staff
-                  isVerified: true
+                success: false
+                errors:
+                  message: User is not found
           headers: {}
-      security:
-        - bearer: []
+      security: []
   /api/v1/users/resetPassword:
     put:
       summary: reset password
@@ -677,7 +686,138 @@ paths:
                 errors:
                   message: New password and confirm password is different!
           headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
+          headers: {}
       security: []
+  /api/v1/users/updateUserDetail:
+    put:
+      summary: update user detail
+      deprecated: false
+      description: ''
+      tags:
+        - User
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                phone:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    alamat:
+                      type: string
+                    kecamatan:
+                      type: string
+                    kelurahan:
+                      type: string
+                    kota:
+                      type: string
+                  required:
+                    - alamat
+                    - kecamatan
+                    - kelurahan
+                    - kota
+              required:
+                - name
+                - phone
+                - location
+            example:
+              name: Daniel Manurung
+              phone: '081299998888'
+              location:
+                alamat: JL Tester No. 1
+                kecamatan: tester barat
+                kelurahan: tester kota
+                kota: tester
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_0
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Successfully update user data
+                data:
+                  _id: 688782e4db2c2ccddeb140d7
+                  name: Daniel Manurung
+                  email: yiserot148@7tul.com
+                  phone: '081299998888'
+                  location:
+                    alamat: JL Tester No. 1
+                    kecamatan: tester barat
+                    kelurahan: tester kota
+                    kota: tester
+                  role: staff
+                  isVerified: true
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
+          headers: {}
+      security:
+        - bearer: []
   /api/v1/users/logout:
     put:
       summary: Logout
@@ -708,6 +848,31 @@ paths:
                 success: true
                 message: User successfully logged out
                 data: null
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: User is not found
           headers: {}
       security:
         - bearer: []
@@ -764,13 +929,66 @@ paths:
                 - size: large
                   price: 18000
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: &ref_1
+                    $ref: '#/components/schemas/Menu'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success create menu
+                data:
+                  name: Kopi Susu Gula Aren
+                  description: Kopi Susu Gula Aren nikmat nyaman diminum
+                  category: coffee
+                  isAvailable: true
+                  variants:
+                    - size: small
+                      price: 12000
+                    - size: regular
+                      price: 15000
+                    - size: large
+                      price: 18000
+                  _id: 6889e187ef13a242d64af679
+                  images: []
+                  createdAt: '2025-07-30T09:10:31.470Z'
+                  updatedAt: '2025-07-30T09:10:31.470Z'
+          headers: {}
+        '400':
+          description: Throw error if given menu name is already exists in database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Menu already exists!
           headers: {}
       security:
         - bearer: []
@@ -782,23 +1000,6 @@ paths:
       tags:
         - Menu
       parameters: []
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              type: string
-            example:
-              name: Kopi Susu Gula Aren
-              description: Kopi nikmat nyaman diminum
-              category: coffee
-              isAvailable: true
-              variants:
-                - size: small
-                  price: 12000
-                - size: medium
-                  price: 15000
-                - size: large
-                  price: 18000
       responses:
         '200':
           description: ''
@@ -806,7 +1007,52 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get all menus
+                data:
+                  - _id: 6889de6dcdf79b72717f3651
+                    name: Sanger
+                    description: Kopi sanger nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 12000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T08:57:17.297Z'
+                    updatedAt: '2025-07-30T08:57:17.297Z'
+                  - _id: 6889e187ef13a242d64af679
+                    name: Kopi Susu Gula Aren
+                    description: Kopi Susu Gula Aren nikmat nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 12000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T09:10:31.470Z'
+                    updatedAt: '2025-07-30T09:10:31.470Z'
           headers: {}
       security: []
   /api/v1/menus/getMenuByCategory/{menuCategory}:
@@ -831,7 +1077,76 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get menu with category coffee
+                data:
+                  - _id: 6889e5629c4de3dc92ca1bb6
+                    name: Sanger
+                    description: Sanger nikmat nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 12000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T09:26:58.045Z'
+                    updatedAt: '2025-07-30T09:26:58.045Z'
+                  - _id: 6889e5889c4de3dc92ca1bb9
+                    name: Kopi Susu Gula Aren
+                    description: Kopi Susu Gula Aren nikmat nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 12000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T09:27:36.497Z'
+                    updatedAt: '2025-07-30T09:27:36.497Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Menus with category food are not found!
           headers: {}
       security: []
   /api/v1/menus/getMenuById/{menuId}:
@@ -856,7 +1171,148 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get menu with id6889e5629c4de3dc92ca1bb6
+                data:
+                  _id: 6889e5629c4de3dc92ca1bb6
+                  name: Sanger
+                  description: Sanger nikmat nyaman diminum
+                  category: coffee
+                  isAvailable: true
+                  variants:
+                    - size: small
+                      price: 12000
+                    - size: regular
+                      price: 15000
+                    - size: large
+                      price: 18000
+                  images: []
+                  createdAt: '2025-07-30T09:26:58.045Z'
+                  updatedAt: '2025-07-30T09:26:58.045Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Menu is not found!
+          headers: {}
+      security: []
+  /api/v1/menus/getAvailableMenu:
+    get:
+      summary: Get Available Menu
+      deprecated: false
+      description: ''
+      tags:
+        - Menu
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get available menu
+                data:
+                  - _id: 6889e5629c4de3dc92ca1bb6
+                    name: Sanger
+                    description: Sanger nikmat nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 12000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T09:26:58.045Z'
+                    updatedAt: '2025-07-30T09:26:58.045Z'
+                  - _id: 6889e5889c4de3dc92ca1bb9
+                    name: Kopi Susu Gula Aren
+                    description: Kopi nikmat nyaman diminum
+                    category: coffee
+                    isAvailable: true
+                    variants:
+                      - size: small
+                        price: 10000
+                      - size: regular
+                        price: 15000
+                      - size: large
+                        price: 18000
+                    images: []
+                    createdAt: '2025-07-30T09:27:36.497Z'
+                    updatedAt: '2025-07-30T10:39:18.093Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: All menus are unavailable!
           headers: {}
       security: []
   /api/v1/menus/updateMenu:
@@ -871,7 +1327,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: 6862b3d15b841c86d2274275
+          example: 6889e5889c4de3dc92ca1bb9
           schema:
             type: string
       requestBody:
@@ -925,7 +1381,60 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success update menu
+                data:
+                  _id: 6889e5889c4de3dc92ca1bb9
+                  name: Kopi Susu Gula Aren
+                  description: Kopi nikmat nyaman diminum
+                  category: coffee
+                  isAvailable: true
+                  variants:
+                    - size: small
+                      price: 10000
+                    - size: regular
+                      price: 15000
+                    - size: large
+                      price: 18000
+                  images: []
+                  createdAt: '2025-07-30T09:27:36.497Z'
+                  updatedAt: '2025-07-30T10:39:18.093Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Menu is not found!
           headers: {}
       security:
         - bearer: []
@@ -941,7 +1450,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: 686a79893d2dcfa15538590b
+          example: 6889e5889c4de3dc92ca1bb9
           schema:
             type: string
       responses:
@@ -951,28 +1460,24 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success delete menu
+                data: null
           headers: {}
       security:
         - bearer: []
-  /api/v1/menus/getAvailableMenu:
-    get:
-      summary: Get Available Menu
-      deprecated: false
-      description: ''
-      tags:
-        - Menu
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-          headers: {}
-      security: []
   /api/v1/images/addImage/for/Menu:
     post:
       summary: add image

@@ -10,6 +10,7 @@ const errorMiddleware = async(err, req, res, next) => {
     });
   } else {
     return res.status(500).json({
+      success : false,
       errors : err.message
     })
   }

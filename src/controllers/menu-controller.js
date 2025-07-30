@@ -28,7 +28,7 @@ const getAllMenus = async(req, res, next) => {
 
 const getMenuByCategory = async(req, res, next) => {
   try {
-    const result = await menuService.getMenuByCategory(req.params.category);
+    const result = await menuService.getMenuByCategory(req.params.menuCategory);
     res.status(200).json({
       success: true,
       message: "Success get menu with category " + result[0].category,

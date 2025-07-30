@@ -14,8 +14,8 @@ const getAllMenus = async() => {
 
 const getMenuByCategory = async(request) => {
   const req = validate(getMenuByCategoryValidation, request);
-  const menus = await Menu.find( { category : req } );
-  if (!menus) {
+  const menus = await Menu.find( { category : req} );
+  if (!menus.length) {
     throw new ResponseError(404, `Menus with category ${req} are not found!`);
   }
   return menus;
@@ -23,7 +23,7 @@ const getMenuByCategory = async(request) => {
 
 const getAvailableMenu = async() => {
   const menus = await Menu.find( { isAvailable: true } );
-  if(!menus){
+  if(!menus.length){
     throw new ResponseError(404, `All menus are unavailable!`);
   }
   return menus;
