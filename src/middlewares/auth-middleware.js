@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv';
 import { tokenValidation } from '../validations/user-validation.js';
 import {validate} from "../validations/validation.js"
-dotenv.config();
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, VERIFY_TOKEN_SECRET } =  process.env;
 import userRouter from "../routes/user-api.js";
 

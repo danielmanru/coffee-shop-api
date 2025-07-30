@@ -1,8 +1,17 @@
 openapi: 3.1.0
 info:
-  title: My Project
-  description: ''
+  title: Coffee Shop API
+  description: |
+    API documentation for coffee shop API
+    
+    Source Code : https://github.com/danielmanru/coffee-shop-api
   version: 1.0.0
+  contact:
+    name: Daniel Manurung
+    url: https://www.linkedin.com/in/daniel-manurung/
+  license:
+    name: APACHE 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
 tags:
   - name: User
   - name: Menu

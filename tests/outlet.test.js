@@ -1,9 +1,7 @@
 import supertest from "supertest";
 import { web } from "../src/config/web.js"
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import {createTestOutlet, createTestUser, removeTestOutlet, removeTestUser, verifyUser} from "./test-util.js";
-dotenv.config();
 
 const path = '/api/v1/outlets'
 beforeAll(async () => {
