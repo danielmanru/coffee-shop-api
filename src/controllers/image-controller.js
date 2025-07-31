@@ -2,7 +2,7 @@ import imageService from "../services/image-service.js";
 
 const addImages = async(req, res, next) => {
   try {
-    const result = await imageService.addImages(req.query.itemId, req.files, req.params.modelName);
+    const result = await imageService.addImages(req.query.documentId, req.files, req.params.uploadFor);
     res.status(201).json({
       success: true,
       message: "Image added successfully",
@@ -15,7 +15,7 @@ const addImages = async(req, res, next) => {
 
 const deleteImages = async(req, res, next) => {
   try {
-    const result = await imageService.deleteImages(req.query.itemId, req.query.publicIds.split(','), req.params.modelName);
+    const result = await imageService.deleteImages(req.query.documentId, req.query.publicIds.split(','), req.params.deleteFor);
     res.status(200).json({
       success: true,
       message: "Image deleted successfully",

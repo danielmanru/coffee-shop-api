@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 const addImagesValidation = Joi.object({
-  item_id: Joi.string().max(1000).required(),
+  document_id: Joi.string().max(1000).required(),
   model_name: Joi.string().valid('Menu', 'Outlet'),
   asset_folder: Joi.string().valid('menu-assets', 'outlet-assets'),
   image_metadata: Joi.array().items(Joi.object(
@@ -13,7 +13,7 @@ const addImagesValidation = Joi.object({
 });
 
 const deleteImagesValidation = Joi.object({
-  item_id: Joi.string().max(1000).required(),
+  document_id: Joi.string().max(1000).required(),
   model_name: Joi.string().valid('Menu', 'Outlet'),
   publicIds: Joi.array().items(Joi.string().max(1000).required())
 });
