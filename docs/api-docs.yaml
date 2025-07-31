@@ -2771,5 +2771,8 @@ components:
     bearer:
       type: http
       scheme: bearer
-servers: []
-security: []
+servers:
+  - url: http://localhost:3000
+    description: Testing Env
+  - url: https://coffee-shop-api-blue.vercel.app/
+    description: Prod Env
