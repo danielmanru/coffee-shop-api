@@ -13,7 +13,7 @@ const singleUpload = async (file, folderName) => {
         display_name: file.originalname,
         use_filename : true,
         use_asset_folder_as_public_id_prefix : true,
-        unique_filename: true
+        overwrite: true
       },
       (err, result) => {
         if (err) return reject(err);

@@ -4,7 +4,7 @@ import {authMiddleware} from "../middlewares/auth-middleware.js";
 import upload from "../middlewares/multer-middleware.js";
 
 const imageRouter = new express.Router();
-imageRouter.post('/addImage/for/:modelName', authMiddleware(["admin"]), upload.array("images", 10), imageController.addImages);
-imageRouter.put('/deleteImage/for/:modelName', authMiddleware(["admin"]), imageController.deleteImages);
+imageRouter.post('/addImage/for/:uploadFor', authMiddleware(["admin"]), upload.array("images", 10), imageController.addImages);
+imageRouter.put('/deleteImage/for/:deleteFor', authMiddleware(["admin"]), imageController.deleteImages);
 
 export default imageRouter;

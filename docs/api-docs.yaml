@@ -33,7 +33,7 @@ paths:
           in: query
           description: ''
           required: false
-          example: 686bbade9ad15a09ecaae0e2
+          example: 688b2fb35d1b065701bf9860
           schema:
             type: string
       requestBody:
@@ -1478,7 +1478,7 @@ paths:
           headers: {}
       security:
         - bearer: []
-  /api/v1/images/addImage/for/Menu:
+  /api/v1/images/addImage/for/{uploadFor}:
     post:
       summary: add image
       deprecated: false
@@ -1486,11 +1486,18 @@ paths:
       tags:
         - Image
       parameters:
-        - name: itemId
+        - name: uploadFor
+          in: path
+          description: Only for Menu and Outlet
+          required: true
+          example: Menu
+          schema:
+            type: string
+        - name: documentId
           in: query
           description: ''
           required: true
-          example: 6862b3d15b841c86d2274275
+          example: 6889e5629c4de3dc92ca1bb6
           schema:
             type: string
       requestBody:
@@ -1500,23 +1507,103 @@ paths:
               type: object
               properties:
                 images:
-                  example: []
-                  type: string
                   format: binary
-              required:
-                - images
+                  type: string
+                  example:
+                    - >-
+                      file://D:\Project\NodeJS\coffee-shop-api\tests\test-assets\Caramel
+                      Machiato 1.png
+                    - >-
+                      file://D:\Project\NodeJS\coffee-shop-api\tests\test-assets\Caramel
+                      Machiato 2.png
+            examples: {}
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Image added successfully
+                data:
+                  _id: 6889e5629c4de3dc92ca1bb6
+                  name: Sanger
+                  description: Sanger nikmat nyaman diminum
+                  category: coffee
+                  isAvailable: true
+                  variants:
+                    - size: small
+                      price: 12000
+                    - size: regular
+                      price: 15000
+                    - size: large
+                      price: 18000
+                  images:
+                    - url: >-
+                        https://res.cloudinary.com/df9r7fwib/image/upload/v1753951610/coffee_shop_assets/menu-assets/file_qqhe9g.png
+                      publicId: coffee_shop_assets/menu-assets/file_qqhe9g
+                    - url: >-
+                        https://res.cloudinary.com/df9r7fwib/image/upload/v1753951610/coffee_shop_assets/menu-assets/file_qh3z76.png
+                      publicId: coffee_shop_assets/menu-assets/file_qh3z76
+                  createdAt: '2025-07-30T09:26:58.045Z'
+                  updatedAt: '2025-07-31T08:46:47.117Z'
+          headers: {}
+        x-201-2:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: &ref_2
+                    $ref: '#/components/schemas/Outlet'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Image added successfully
+                data:
+                  _id: 688b2fb35d1b065701bf9860
+                  name: Gatot Subroto Medan
+                  location:
+                    alamat: Jl. Gatot Subroto No. 114
+                    kecamatan: Medan Maimun
+                    kelurahan: Maimun
+                  openingHours:
+                    open: '08:00'
+                    close: '22:00'
+                  isActive: true
+                  images:
+                    - url: >-
+                        https://res.cloudinary.com/df9r7fwib/image/upload/v1753952521/coffee_shop_assets/outlet-assets/file_ax7fgb.png
+                      publicId: coffee_shop_assets/outlet-assets/file_ax7fgb
+                  staff:
+                    - staffId: 688b30125d1b065701bf9864
+                      isActive: true
+                  createdAt: '2025-07-31T08:56:19.074Z'
+                  updatedAt: '2025-07-31T09:01:57.646Z'
           headers: {}
       security:
         - bearer: []
-  /api/v1/images/deleteImage/for/Menu:
+  /api/v1/images/deleteImage/for/{deleteFor}:
     put:
       summary: Delete Image
       deprecated: false
@@ -1524,19 +1611,26 @@ paths:
       tags:
         - Image
       parameters:
-        - name: itemId
+        - name: deleteFor
+          in: path
+          description: ''
+          required: true
+          example: Menu
+          schema:
+            type: string
+        - name: documentId
           in: query
           description: ''
           required: true
-          example: 6862b3d15b841c86d2274275
+          example: 6889e5629c4de3dc92ca1bb6
           schema:
             type: string
         - name: publicIds
           in: query
-          description: ''
+          description: Separate publicIds with "," for multiple item deletion
           required: true
           example: >-
-            coffee_shop_assetsundefined/kopi-susu-gula-aren1.jpeg,coffee_shop_assetsundefined/kopi-susu-gula-aren2.jpg
+            coffee_shop_assets/menu-assets/file_wfeslv,coffee_shop_assets/menu-assets/file_zzcsrc
           schema:
             type: string
       responses:
@@ -1546,7 +1640,96 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_1
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Image deleted successfully
+                data:
+                  _id: 6889e5629c4de3dc92ca1bb6
+                  name: Sanger
+                  description: Sanger nikmat nyaman diminum
+                  category: coffee
+                  isAvailable: true
+                  variants:
+                    - size: small
+                      price: 12000
+                    - size: regular
+                      price: 15000
+                    - size: large
+                      price: 18000
+                  images: []
+                  createdAt: '2025-07-30T09:26:58.045Z'
+                  updatedAt: '2025-07-31T09:54:04.002Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: One of PublicIdS is not found!
+          headers: {}
+        x-200-2:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Image deleted successfully
+                data:
+                  _id: 688b2fb35d1b065701bf9860
+                  name: Gatot Subroto Medan
+                  location:
+                    alamat: Jl. Gatot Subroto No. 114
+                    kecamatan: Medan Maimun
+                    kelurahan: Maimun
+                  openingHours:
+                    open: '08:00'
+                    close: '22:00'
+                  isActive: true
+                  images: []
+                  staff:
+                    - staffId: 688b30125d1b065701bf9864
+                      isActive: true
+                  createdAt: '2025-07-31T08:56:19.074Z'
+                  updatedAt: '2025-07-31T09:21:50.733Z'
           headers: {}
       security:
         - bearer: []
@@ -1607,13 +1790,40 @@ paths:
                 close: '22:00'
               isActive: true
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success add new outlet
+                data:
+                  name: Gatot Subroto Medan
+                  location:
+                    alamat: Jl. Gatot Subroto No. 114
+                    kecamatan: Medan Maimun
+                    kelurahan: Maimun
+                  openingHours:
+                    open: '08:00'
+                    close: '22:00'
+                  isActive: true
+                  _id: 688b2fb35d1b065701bf9860
+                  images: []
+                  staff: []
+                  createdAt: '2025-07-31T08:56:19.074Z'
+                  updatedAt: '2025-07-31T08:56:19.074Z'
           headers: {}
       security:
         - bearer: []
