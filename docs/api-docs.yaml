@@ -1825,6 +1825,30 @@ paths:
                   createdAt: '2025-07-31T08:56:19.074Z'
                   updatedAt: '2025-07-31T08:56:19.074Z'
           headers: {}
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Outlet already exists
+          headers: {}
       security:
         - bearer: []
   /api/v1/outlets/:
@@ -1842,7 +1866,176 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get all outlets
+                data:
+                  - _id: 688decff1ae112a3e84a8e0e
+                    name: Gatot Subroto Medan
+                    location:
+                      alamat: Jl. Gatot Subroto No. 114
+                      kecamatan: Medan Maimun
+                      kelurahan: Maimun
+                    openingHours:
+                      open: '08:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:48:31.782Z'
+                    updatedAt: '2025-08-02T10:48:31.782Z'
+                  - _id: 688deded1ae112a3e84a8e13
+                    name: Sisingamangaraja Medan
+                    location:
+                      alamat: Jl. Sisingamangaraja No. 89
+                      kecamatan: Medan Kota
+                      kelurahan: Pasar Merah
+                    openingHours:
+                      open: '08:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:29.455Z'
+                    updatedAt: '2025-08-02T10:52:29.455Z'
+                  - _id: 688dedf51ae112a3e84a8e16
+                    name: Setiabudi Medan
+                    location:
+                      alamat: Jl. Setiabudi No. 45
+                      kecamatan: Medan Selayang
+                      kelurahan: Simpang Selayang
+                    openingHours:
+                      open: '09:00'
+                      close: '21:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:37.733Z'
+                    updatedAt: '2025-08-02T10:52:37.733Z'
+                  - _id: 688dedfa1ae112a3e84a8e19
+                    name: Iskandar Muda Medan
+                    location:
+                      alamat: Jl. Iskandar Muda No. 12A
+                      kecamatan: Medan Petisah
+                      kelurahan: Petisah Hulu
+                    openingHours:
+                      open: '10:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:42.846Z'
+                    updatedAt: '2025-08-02T10:52:42.846Z'
+                  - _id: 688dee011ae112a3e84a8e1c
+                    name: Pancing Medan
+                    location:
+                      alamat: Jl. Pancing No. 101
+                      kecamatan: Medan Tembung
+                      kelurahan: Bantan
+                    openingHours:
+                      open: '08:30'
+                      close: '21:30'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:49.529Z'
+                    updatedAt: '2025-08-02T10:52:49.529Z'
+                  - _id: 688dee061ae112a3e84a8e1f
+                    name: Ringroad Medan
+                    location:
+                      alamat: Jl. Ringroad No. 73
+                      kecamatan: Medan Sunggal
+                      kelurahan: Sunggal
+                    openingHours:
+                      open: '08:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:54.515Z'
+                    updatedAt: '2025-08-02T10:52:54.515Z'
+                  - _id: 688dee0b1ae112a3e84a8e22
+                    name: AH Nasution Medan
+                    location:
+                      alamat: Jl. AH Nasution No. 30
+                      kecamatan: Medan Johor
+                      kelurahan: Titi Kuning
+                    openingHours:
+                      open: '09:00'
+                      close: '21:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:59.155Z'
+                    updatedAt: '2025-08-02T10:52:59.155Z'
+                  - _id: 688dee101ae112a3e84a8e25
+                    name: Kapten Muslim Medan
+                    location:
+                      alamat: Jl. Kapten Muslim No. 58
+                      kecamatan: Medan Helvetia
+                      kelurahan: Helvetia Tengah
+                    openingHours:
+                      open: '10:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:53:04.662Z'
+                    updatedAt: '2025-08-02T10:53:04.662Z'
+                  - _id: 688dee151ae112a3e84a8e28
+                    name: Jamin Ginting Medan
+                    location:
+                      alamat: Jl. Jamin Ginting No. 140
+                      kecamatan: Medan Tuntungan
+                      kelurahan: Lau Cih
+                    openingHours:
+                      open: '08:00'
+                      close: '20:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:53:09.935Z'
+                    updatedAt: '2025-08-02T10:53:09.935Z'
+                  - _id: 688dee1a1ae112a3e84a8e2b
+                    name: Letda Sujono Medan
+                    location:
+                      alamat: Jl. Letda Sujono No. 23
+                      kecamatan: Medan Tembung
+                      kelurahan: Bantan Timur
+                    openingHours:
+                      open: '07:30'
+                      close: '21:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:53:14.537Z'
+                    updatedAt: '2025-08-02T10:53:14.537Z'
+                  - _id: 688dee1f1ae112a3e84a8e2e
+                    name: Asia Mega Mas Medan
+                    location:
+                      alamat: Komplek Asia Mega Mas Blok C No. 7
+                      kecamatan: Medan Area
+                      kelurahan: Sukaramai II
+                    openingHours:
+                      open: '08:00'
+                      close: '22:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:53:19.472Z'
+                    updatedAt: '2025-08-02T10:53:19.472Z'
           headers: {}
       security: []
   /api/v1/outlets/searchOutlet:
@@ -1857,7 +2050,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: gatot
+          example: selayang
           schema:
             type: string
       responses:
@@ -1867,7 +2060,62 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get outlet searched
+                data:
+                  - _id: 688dedf51ae112a3e84a8e16
+                    name: Setiabudi Medan
+                    location:
+                      alamat: Jl. Setiabudi No. 45
+                      kecamatan: Medan Selayang
+                      kelurahan: Simpang Selayang
+                    openingHours:
+                      open: '09:00'
+                      close: '21:00'
+                    isActive: true
+                    images: []
+                    staff: []
+                    createdAt: '2025-08-02T10:52:37.733Z'
+                    updatedAt: '2025-08-02T10:52:37.733Z'
+                    score: 1.5
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Outlet not found
           headers: {}
       security: []
   /api/v1/outlets/updateOutlet:
@@ -1940,7 +2188,59 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success Update Outlet with id 688decff1ae112a3e84a8e0e
+                data:
+                  _id: 688decff1ae112a3e84a8e0e
+                  name: Gatot Subroto 1 Medan
+                  location:
+                    alamat: Jl. Gatot Subroto No. 125
+                    kecamatan: Medan Maimun
+                    kelurahan: Maimun
+                  openingHours:
+                    open: '08:00'
+                    close: '22:00'
+                  isActive: false
+                  images: []
+                  staff: []
+                  createdAt: '2025-08-02T10:48:31.782Z'
+                  updatedAt: '2025-08-02T11:07:35.056Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Outlet not found
           headers: {}
       security:
         - bearer: []
@@ -1966,7 +2266,59 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_2
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success get outlet with id 688decff1ae112a3e84a8e0e
+                data:
+                  _id: 688decff1ae112a3e84a8e0e
+                  name: Gatot Subroto 1 Medan
+                  location:
+                    alamat: Jl. Gatot Subroto No. 125
+                    kecamatan: Medan Maimun
+                    kelurahan: Maimun
+                  openingHours:
+                    open: '08:00'
+                    close: '22:00'
+                  isActive: false
+                  images: []
+                  staff: []
+                  createdAt: '2025-08-02T10:48:31.782Z'
+                  updatedAt: '2025-08-02T11:07:35.056Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Outlet not found
           headers: {}
       security: []
   /api/v1/outlets/deleteOutlet:
@@ -1991,7 +2343,46 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success delete outlet with id 688decff1ae112a3e84a8e0e
+                data: null
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Outlet not found
           headers: {}
       security:
         - bearer: []
@@ -2677,8 +3068,17 @@ components:
             - kecamatan
             - kelurahan
         images:
-          type: object
-          properties: {}
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              publicId:
+                type: string
+            required:
+              - url
+              - publicId
         openingHours:
           type: object
           properties:
@@ -2692,22 +3092,23 @@ components:
             - open
             - close
         staff:
-          type: object
-          properties:
-            staffId:
-              type: string
-            isActive:
-              type: boolean
-          required:
-            - staffId
-            - isActive
+          type: array
+          items:
+            type: object
+            properties:
+              staffId:
+                type: string
+              isActive:
+                type: boolean
+            required:
+              - staffId
+              - isActive
         isActive:
           type: boolean
       required:
         - name
         - isActive
         - openingHours
-        - images
         - location
     Payment:
       type: object
