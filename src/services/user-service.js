@@ -34,10 +34,13 @@ const register = async(request) => {
   }
 
   user.password = await bcrypt.hash(user.password, 10);
+  try {
+    await sendVerificationEmail(user.email);
+  } catch (err) {
+    console.error('Gagal mengirim email verifikasi:', err.message);
+  }
 
-  await sendVerificationEmail(user.email)
-
-
+  user.isVerified = true;
   const userCreated = await User.create(user);
   await cartService.initializeNewCart(userCreated._id)
   if(user.role === 'staff') {
@@ -101,11 +104,15 @@ const updateUserDetail = async (request, userEmail) => {
 };
 
 const sendVerificationEmail =  async (userEmail) => {
-  const verificationToken = await jwt.sign({ email: userEmail}, VERIFY_TOKEN_SECRET, { expiresIn : "1d" });
-  const verificationLink = `${API_URI}/users/verifyUser?token=${verificationToken}`
-  const emailTemplate = await getEmailHtml('verification-email.ejs', { link : verificationLink})
+  try {
+    const verificationToken = await jwt.sign({email: userEmail}, VERIFY_TOKEN_SECRET, {expiresIn: "1d"});
+    const verificationLink = `${API_URI}/users/verifyUser?token=${verificationToken}`
+    const emailTemplate = await getEmailHtml('verification-email.ejs', {link: verificationLink})
 
-  sendEmail(userEmail, 'Verify your email', emailTemplate)
+    await sendEmail(userEmail, 'Verify your email', emailTemplate)
+  } catch (err) {
+    throw new Error("Error sending verification email: " + err.message)
+  }
 }
 
 const verifyUser = async (request) => {
