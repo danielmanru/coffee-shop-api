@@ -37,7 +37,7 @@ const register = async(request) => {
   try {
     await sendVerificationEmail(user.email);
   } catch (err) {
-    console.error('Gagal mengirim email verifikasi:', err.message);
+    console.error('Failed to send verification email:', err.message);
   }
 
   user.isVerified = true;
