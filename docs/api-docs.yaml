@@ -2386,7 +2386,7 @@ paths:
           headers: {}
       security:
         - bearer: []
-  /api/v1/cart/:
+  /api/v1/cart/user:
     get:
       summary: Get User Cart
       deprecated: false
@@ -2401,7 +2401,66 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: &ref_3
+                    $ref: '#/components/schemas/Cart'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 6895f6c56f316d777c040209
+                  userId: 6895f6c56f316d777c040207
+                  totalPrice: 45000
+                  items:
+                    - menuId: 6889de6dcdf79b72717f3651
+                      temperature: hot
+                      iceLevel: no_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fc9d4022cb63f8bb2155
+                    - menuId: 6889e187ef13a242d64af679
+                      temperature: cold
+                      iceLevel: regular_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 1
+                      _id: 6895fce64022cb63f8bb215d
+                  createdAt: '2025-08-08T13:08:21.777Z'
+                  updatedAt: '2025-08-08T13:34:30.978Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Cart not found
           headers: {}
       security:
         - bearer: []
@@ -2433,29 +2492,94 @@ paths:
                 - iceLevel
                 - variant
             example:
-              menuId: 686b963623194360ced8d009
+              menuId: 6889de6dcdf79b72717f3651
               temperature: hot
               iceLevel: no_ice
               variant: regular
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_3
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 6895f6c56f316d777c040209
+                  userId: 6895f6c56f316d777c040207
+                  totalPrice: 45000
+                  items:
+                    - menuId: 6889de6dcdf79b72717f3651
+                      temperature: hot
+                      iceLevel: no_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fc9d4022cb63f8bb2155
+                    - menuId: 6889e187ef13a242d64af679
+                      temperature: cold
+                      iceLevel: regular_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 1
+                      _id: 6895fce64022cb63f8bb215d
+                  createdAt: '2025-08-08T13:08:21.777Z'
+                  updatedAt: '2025-08-08T13:34:30.978Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Menu is not found!
           headers: {}
       security:
         - bearer: []
-  /api/v1/cart/increase/item/6881ff5b976c95bf77d258ce:
+  /api/v1/cart/increase/item/{cartItemId}:
     patch:
       summary: Increase Quantity
       deprecated: false
       description: ''
       tags:
         - Cart
-      parameters: []
+      parameters:
+        - name: cartItemId
+          in: path
+          description: ''
+          required: true
+          example: 6895fce64022cb63f8bb215d
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -2463,18 +2587,83 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_3
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 6895f6c56f316d777c040209
+                  userId: 6895f6c56f316d777c040207
+                  totalPrice: 60000
+                  items:
+                    - menuId: 6889de6dcdf79b72717f3651
+                      temperature: hot
+                      iceLevel: no_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fc9d4022cb63f8bb2155
+                    - menuId: 6889e187ef13a242d64af679
+                      temperature: cold
+                      iceLevel: regular_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fce64022cb63f8bb215d
+                  createdAt: '2025-08-08T13:08:21.777Z'
+                  updatedAt: '2025-08-08T13:46:59.100Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Cart item not found
           headers: {}
       security:
         - bearer: []
-  /api/v1/cart/decrease/item/6881ff5b976c95bf77d258ce:
+  /api/v1/cart/decrease/item/{cartItemId}:
     patch:
       summary: Decrease Quantity
       deprecated: false
       description: ''
       tags:
         - Cart
-      parameters: []
+      parameters:
+        - name: cartItemId
+          in: path
+          description: ''
+          required: true
+          example: 6895fce64022cb63f8bb215d
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -2482,18 +2671,83 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_3
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 6895f6c56f316d777c040209
+                  userId: 6895f6c56f316d777c040207
+                  totalPrice: 45000
+                  items:
+                    - menuId: 6889de6dcdf79b72717f3651
+                      temperature: hot
+                      iceLevel: no_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fc9d4022cb63f8bb2155
+                    - menuId: 6889e187ef13a242d64af679
+                      temperature: cold
+                      iceLevel: regular_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 1
+                      _id: 6895fce64022cb63f8bb215d
+                  createdAt: '2025-08-08T13:08:21.777Z'
+                  updatedAt: '2025-08-08T13:50:02.148Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Cart item not found
           headers: {}
       security:
         - bearer: []
-  /api/v1/cart/delete/item/6881ff5b976c95bf77d258ce:
+  /api/v1/cart/delete/item/{cartItemId}:
     delete:
       summary: Delete Cart Item
       deprecated: false
       description: ''
       tags:
         - Cart
-      parameters: []
+      parameters:
+        - name: cartItemId
+          in: path
+          description: ''
+          required: true
+          example: 6895fce64022cb63f8bb215d
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -2501,7 +2755,58 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_3
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 6895f6c56f316d777c040209
+                  userId: 6895f6c56f316d777c040207
+                  totalPrice: 30000
+                  items:
+                    - menuId: 6889de6dcdf79b72717f3651
+                      temperature: hot
+                      iceLevel: no_ice
+                      variant: regular
+                      price: 15000
+                      quantity: 2
+                      _id: 6895fc9d4022cb63f8bb2155
+                  createdAt: '2025-08-08T13:08:21.777Z'
+                  updatedAt: '2025-08-08T13:52:07.682Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Cart item not found
           headers: {}
       security:
         - bearer: []
@@ -2887,15 +3192,25 @@ components:
           type:
             - string
             - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - name
         - email
         - password
         - phone
         - role
+        - createdAt
+        - updatedAt
     Cart:
       type: object
       properties:
+        _id:
+          type: string
         userId:
           type: string
         items:
@@ -2933,8 +3248,17 @@ components:
         totalPrice:
           type: integer
           description: 'Default : 0'
+        createdAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time
       required:
         - userId
+        - _id
+        - createdAt
+        - updateAt
     Menu:
       type: object
       properties:
@@ -2969,6 +3293,12 @@ components:
           required:
             - size
             - price
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - name
         - category
@@ -2976,9 +3306,13 @@ components:
         - _id
         - variants
         - description
+        - createdAt
+        - updatedAt
     Order:
       type: object
       properties:
+        _id:
+          type: string
         userId:
           type: string
         outletId:
@@ -3041,6 +3375,12 @@ components:
             - on_delivery
             - cancelled
             - completed
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - userId
         - outletId
@@ -3049,9 +3389,14 @@ components:
         - deliveryFee
         - totalPrice
         - status
+        - _id
+        - createdAt
+        - updatedAt
     Outlet:
       type: object
       properties:
+        _id:
+          type: string
         name:
           type: string
         location:
@@ -3105,11 +3450,20 @@ components:
               - isActive
         isActive:
           type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - name
         - isActive
         - openingHours
         - location
+        - _id
+        - createdAt
+        - updatedAt
     Payment:
       type: object
       properties:
@@ -3158,6 +3512,12 @@ components:
         expiresAt:
           type: string
           format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - _id
         - userId
@@ -3168,6 +3528,8 @@ components:
         - status
         - paymentUrl
         - expiresAt
+        - createdAt
+        - updatedAt
   securitySchemes:
     bearer:
       type: http
