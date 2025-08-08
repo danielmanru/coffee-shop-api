@@ -3,7 +3,7 @@ import {authMiddleware} from "../middlewares/auth-middleware.js";
 import cartController from "../controllers/cart-controller.js";
 
 const cartRouter = new express.Router();
-cartRouter.get('/', authMiddleware(['customer']), cartController.getUserCart)
+cartRouter.get('/user', authMiddleware(['customer']), cartController.getUserCart)
 cartRouter.post('/add', authMiddleware(['customer']), cartController.addItemToCart)
 cartRouter.patch('/increase/item/:cartItemId', authMiddleware(['customer']), cartController.increaseQuantity)
 cartRouter.patch('/decrease/item/:cartItemId', authMiddleware(['customer']), cartController.decreaseQuantity)
