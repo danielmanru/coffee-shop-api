@@ -23,9 +23,12 @@ const register = async(request) => {
   let outlet;
   if(user.role === 'staff') {
     if (!request.query.outletId) {
-      throw new ResponseError(400, "outletId is required")
+      throw new ResponseError(400, "outletId is required");
     }
     outlet = await Outlet.findById(request.query.outletId);
+    if (!outlet) {
+      throw new ResponseError(404, 'Outlet not found');
+    }
   }
   const countUser =  await User.countDocuments({ email: user.email });
 

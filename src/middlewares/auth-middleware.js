@@ -50,11 +50,7 @@ export const authMiddleware = (roles = []) => {
           return res.status(401).json({
             errors : "Unauthorized"
           })
-        } else if(user.role === 'staff' && req.query.orderStatus === "on_delivery"){
-          return res.status(401).json({
-            errors : "Unauthorized"
-          })
-        } else if(user.role === 'admin' && req.query.orderStatus !== "on_delivery"){
+        } else if(user.role === 'staff' && req.query.orderStatus === "pending" || req.query.orderStatus === "completed"){
           return res.status(401).json({
             errors : "Unauthorized"
           })

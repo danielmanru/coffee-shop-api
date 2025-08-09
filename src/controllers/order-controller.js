@@ -1,4 +1,5 @@
 import orderService from "../services/order-service.js";
+import {logger} from "../config/logger.js";
 
 const getAllOrders = async (req, res, next) => {
   try {

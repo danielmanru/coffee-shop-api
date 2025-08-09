@@ -11,14 +11,17 @@ const getOrdersByOutletId = async (outlet_id) => {
   if(typeof outlet_id !== 'string'){
     throw new ResponseError(400, "outlet_id is invalid");
   }
-
-  return Order.find({outletId: outlet_id});
+  const orders = await Order.find({outletId: outlet_id});
+  if(orders.length === 0) {
+    throw new ResponseError(404, "The outlet does not have any orders yet");
+  }
+  return orders;
 }
 
 const getUserOrders = async (user_id) => {
   const userOrders = await Order.find({userId: user_id});
   if (!userOrders.length) {
-    throw new ResponseError(404, "User not order yet");
+    throw new ResponseError(404, "The user has not placed an order yet");
   }
 
   return userOrders;
