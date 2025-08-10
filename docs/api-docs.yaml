@@ -1630,7 +1630,7 @@ paths:
       security:
         - bearer: []
   /api/v1/images/deleteImage/for/{deleteFor}:
-    put:
+    delete:
       summary: Delete Image
       deprecated: false
       description: ''
