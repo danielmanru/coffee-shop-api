@@ -8,7 +8,7 @@ orderRouter.get("/user/orders", authMiddleware(['customer']), orderController.ge
 orderRouter.get("/", authMiddleware(['admin']), orderController.getAllOrders);
 orderRouter.get("/order/:orderId", authMiddleware(['customer', 'admin']), orderController.getOrderById);
 orderRouter.get("/user/:userId", authMiddleware(['admin']), orderController.getOrdersByUserId);
-orderRouter.get("/outlet/:outletId", authMiddleware(['admin']), orderController.getOrdersByOutletId);
+orderRouter.get("/outlet/:outletId", authMiddleware(['admin','staff']), orderController.getOrdersByOutletId);
 orderRouter.post("/add", authMiddleware(['customer']), orderController.createOrder);
 orderRouter.patch("/update/status", authMiddleware(), orderController.updateOrderStatus);
 

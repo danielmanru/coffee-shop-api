@@ -4,7 +4,7 @@ import Menu from "../models/menu.model.js";
 import cartService from "./cart-service.js";
 
 const getAllOrders = async () => {
-  return Order.find({});
+  return Order.find();
 }
 
 const getOrdersByOutletId = async (outlet_id) => {
