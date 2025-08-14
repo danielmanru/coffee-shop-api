@@ -1630,7 +1630,7 @@ paths:
       security:
         - bearer: []
   /api/v1/images/deleteImage/for/{deleteFor}:
-    delete:
+    put:
       summary: Delete Image
       deprecated: false
       description: ''
@@ -3331,7 +3331,7 @@ paths:
     get:
       summary: Get Orders By Outlet Id
       deprecated: false
-      description: 'Role : admin, customer'
+      description: ''
       tags:
         - Order
       parameters:
@@ -3408,7 +3408,7 @@ paths:
           headers: {}
       security:
         - bearer: []
-  /api/v1/payment/add:
+  /api/v1/payments/add:
     post:
       summary: Add Payment
       deprecated: false
@@ -3433,21 +3433,95 @@ paths:
                 - amount
                 - paymentMethod
             example:
-              orderId: 68848cc06bc4d8143ffd4f7d
+              orderId: 6896161bdb7545fae208f690
               amount: 57000
               paymentMethod: qris
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: &ref_5
+                    $ref: '#/components/schemas/Payment'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  userId: 6895f6c56f316d777c040207
+                  orderId: 6896161bdb7545fae208f690
+                  amount: 57000
+                  paymentMethod: qris
+                  paymentReceipt: null
+                  status: unpaid
+                  _id: 689dc6fb5e50fb3f848ba900
+                  paymentUrl: https://www.paymentgateway.com/payment/example
+                  expiresAt: '2025-08-14T14:22:35.347Z'
+                  createdAt: '2025-08-14T11:22:35.355Z'
+                  updatedAt: '2025-08-14T11:22:35.355Z'
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Order not found
+          headers: {}
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Payment is already created
           headers: {}
       security:
         - bearer: []
-  /api/v1/payment/update/status:
+  /api/v1/payments/update/status:
     patch:
       summary: Update Payment Status
       deprecated: false
@@ -3459,7 +3533,7 @@ paths:
           in: query
           description: ''
           required: true
-          example: 68848cc06bc4d8143ffd4f7d
+          example: 6896161bdb7545fae208f690
           schema:
             type: string
         - name: paymentStatus
@@ -3487,7 +3561,7 @@ paths:
                 - paidAt
             example:
               transactionId: txn68848cc06bc4d8143ffd4f7d
-              amount: 57000
+              amount: 42000
               paidAt: '2025-07-26T08:38:00.143Z'
       responses:
         '200':
@@ -3496,7 +3570,96 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: 'null'
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data: null
+          headers: {}
+        '400':
+          description: >-
+            Throws an error when the request body is not sent during the status
+            update to paid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Payment receipt is required
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Payment not found
+          headers: {}
+        '409':
+          description: Throws an error when payment status is already updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Payment status already updated
           headers: {}
       security:
         - bearer: []
@@ -3515,7 +3678,33 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items: *ref_5
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  - _id: 689dc6fb5e50fb3f848ba900
+                    userId: 6895f6c56f316d777c040207
+                    orderId: 6896161bdb7545fae208f690
+                    amount: 57000
+                    paymentMethod: qris
+                    paymentReceipt: null
+                    status: unpaid
+                    paymentUrl: https://www.paymentgateway.com/payment/example
+                    expiresAt: '2025-08-14T14:22:35.347Z'
+                    createdAt: '2025-08-14T11:22:35.355Z'
+                    updatedAt: '2025-08-14T11:22:35.355Z'
           headers: {}
       security:
         - bearer: []
@@ -3531,7 +3720,7 @@ paths:
           in: path
           description: ''
           required: true
-          example: 68848cc06bc4d8143ffd4f7d
+          example: 6896161bdb7545fae208f690
           schema:
             type: string
       responses:
@@ -3541,7 +3730,86 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data: *ref_5
+                required:
+                  - success
+                  - message
+                  - data
+              example:
+                success: true
+                message: Success!
+                data:
+                  _id: 689dc6fb5e50fb3f848ba900
+                  userId: 6895f6c56f316d777c040207
+                  orderId: 6896161bdb7545fae208f690
+                  amount: 57000
+                  paymentMethod: qris
+                  paymentReceipt: null
+                  status: unpaid
+                  paymentUrl: https://www.paymentgateway.com/payment/example
+                  expiresAt: '2025-08-14T14:22:35.347Z'
+                  createdAt: '2025-08-14T11:22:35.355Z'
+                  updatedAt: '2025-08-14T11:22:35.355Z'
+          headers: {}
+        '401':
+          description: >-
+            Throws an error if :
+
+            1. The payment is not associated with the logged-in customer
+
+            2. The payment is not associated with an order placed at the outlet
+            where the staff member works
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Unauthorized
+          headers: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                required:
+                  - success
+                  - errors
+              example:
+                success: false
+                errors:
+                  message: Payment not found
           headers: {}
       security:
         - bearer: []

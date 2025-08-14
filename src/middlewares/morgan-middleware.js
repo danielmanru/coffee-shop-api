@@ -7,8 +7,8 @@ const stream= {
 };
 
 const skip = () => {
-  const env = process.env.NODE_ENV || "production";
-  return env !== "production";
+  const env = process.env.NODE_ENV || "development";
+  return env !== "development";
 };
 
 const morganMiddleware = morgan(

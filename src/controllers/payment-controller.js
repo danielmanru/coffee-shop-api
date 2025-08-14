@@ -15,7 +15,7 @@ const getAllPayments = async (req, res, next) => {
 
 const getPaymentByOrderId = async (req, res, next) => {
   try {
-    const result = await paymentService.getPaymentByOrderId(req.params.orderId);
+    const result = await paymentService.getPaymentByOrderId(req.user, req.params.orderId);
     return res.status(200).json({
       success: true,
       message: 'Success!',

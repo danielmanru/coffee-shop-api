@@ -1,15 +1,27 @@
 import Payment from "../models/payment.model.js";
 import Order from "../models/order.model.js";
 import {ResponseError} from "../error/response-error.js";
+import Outlet from "../models/outlet.model.js";
 
 const getAllPayments = async () => {
   return Payment.find({});
 }
 
-const getPaymentByOrderId = async (order_id) => {
+const getPaymentByOrderId = async (user, order_id) => {
   const payment = await Payment.findOne({orderId: order_id})
   if(!payment) {
     throw new ResponseError(404, "Payment not found");
+  }
+  if(user.role === "customer") {
+    if(user._id !== payment.userId) {
+      throw new ResponseError(401, "Unauthorized");
+    }
+  } else if(user.role === "staff") {
+    const staffOutletId = await Outlet.find({"staff.staffId" : user._id}).select("_id");
+    const orderOutletId = await Order.find({_id: payment.orderId}).select("outletId");
+    if (staffOutletId !== orderOutletId) {
+      throw new ResponseError(401, "Unauthorized");
+    }
   }
 
   return payment;
