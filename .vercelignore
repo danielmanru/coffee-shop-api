@@ -1,5 +1,4 @@
 Dockerfile
-bun.lock
 .github/
 .env.example
 .gitignore
