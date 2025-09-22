@@ -1,0 +1,10 @@
+Dockerfile
+bun.lock
+.github/
+.env.example
+.gitignore
+.dockerignore
+README.md
+test/
+vitest.config.js
+package-lock.json

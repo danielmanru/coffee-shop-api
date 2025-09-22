@@ -5,8 +5,7 @@ import router from "../routes/index.js";
 
 export const web = express();
 
-web.use(express.json())
+web.use(express.json());
 web.use(morganMiddleware);
-// web.use('/api/v1', router);
 web.use("/api/v1", router);
 web.use(errorMiddleware);

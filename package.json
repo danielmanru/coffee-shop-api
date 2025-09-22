@@ -4,7 +4,7 @@
   "description": "API for coffee shop application",
   "main": "src/main.js",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
     "dev": "nodemon src/main.js",
     "start": "node src/main.js"
   },
