@@ -1,0 +1,13 @@
+.github/
+.env.example
+.vercelignore
+package-lock.json
+README.md
+vercel.json
+.idea/
+.vercel/
+node_modules/
+.env
+.gitignore
+.git
+Dockerfile

@@ -4,14 +4,14 @@ import Menu from "../src/models/menu.model.js";
 import Outlet from "../src/models/outlet.model.js";
 
 const removeTestUser = async () => {
-  await User.deleteOne({email: "piceso3624@dxirl.com"})
+  await User.deleteOne({email: "donaca5537@cerisun.com"})
 }
 
 const createTestUser = async (role) => {
   const hashedPassword = await bcrypt.hash("K5gb#mpg", 10);
   await User.create({
     name: "Piceso",
-    email: "piceso3624@dxirl.com",
+    email: "donaca5537@cerisun.com",
     password: hashedPassword,
     phone: "081299998888",
     role: role
@@ -73,7 +73,7 @@ const createTestOutlet = async () => {
 }
 
 const verifyUser = async () => {
-  await User.findOneAndUpdate({email: "piceso3624@dxirl.com"},
+  await User.findOneAndUpdate({email: "donaca5537@cerisun.com"},
     { $set: {isVerified: true} });
 }
 
